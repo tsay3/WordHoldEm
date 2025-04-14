@@ -28,8 +28,8 @@ public class Dictionary {
                 wordList.add(word);
                 index = nextNewline + 1;
             }
-        } catch (IOException | URISyntaxException e) {
-
+        } catch (IOException | URISyntaxException | NullPointerException e) {
+            e.printStackTrace();
         }
     }
 

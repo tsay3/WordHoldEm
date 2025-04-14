@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 // played over a series of 9 rounds
 // for the first 8 rounds:
 //  call the LetterPicker for new Letters
@@ -21,8 +17,6 @@ public class App {
     }
 
     public static void main(String[] args) {
-//        testLetterCombos();
-//        testPermutations();
 
     }
 }

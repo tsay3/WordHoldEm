@@ -200,8 +200,8 @@ public class HandCategory {
         if (start + 2 > end) return null;
         if (start < 0) return null;
         if (end >= letters.size()) return null;
-        Integer length = end - start + 1;
-        Integer value = 0;
+        int length = end - start + 1;
+        int value = 0;
         for (int i = 3; i < length; i++) {
             // for 8 characters, there are 6
             value += (letters.size() - i + 1);
@@ -209,182 +209,9 @@ public class HandCategory {
         return value + start;
     }
 
-    // does the reverse of the above
-    private static ImmutablePair<Integer, Integer> indexToStartAndEnd(Integer index) {
-        // 0 -> (0, 2)    1 -> (1, 3)
-        // 6 -> (0, 3)    11 -> (0, 4)    16 -> (1, 6)
-        Integer size = 3;
-        Integer start = index;
-        while (start >= (letters.size() - size + 1)) {
-            start -= (letters.size() - size + 1);
-            size++;
-        }
-        return new ImmutablePair<>(start, start+size-1);
-    }
-//    private static Integer straightScore(Integer index) {
-//        Integer size = 3;
-//        while (index >= (letters.size() - size + 1)) {
-//            index -= (letters.size() - size + 1);
-//            size++;
-//        }
-//        // 3-straights: 4 points each
-//        // ...
-//        // 8-straights: 120 points each
-//        int[] modifiers = {4, 10, 20, 50, 80, 120};
-//        int modifier = modifiers[size - 3];
-//        return allStraights.get(index) * modifier;
-//    }
-
-//    private static void addAllStraightsInRange(Integer start, Integer end) {
-//        if (end - start < 2) return;
-//        if (start < 0) return;
-//        if (end > letters.size()) return;
-//        for (int i = start; i < end - 2; i++) {
-//            for (int j = i + 2; j < end; j++) {
-//                int index = getStraightIndex(i, j);
-//                allStraights.set(index, allStraights.get(index) + 1);
-//            }
-//        }
-//    }
-
-    private static void setAllStraightsInRange(List<Boolean> foundStraights,
-                                               Integer start, Integer end) {
-        if (end - start < 2) return;
-        if (start < 0) return;
-        if (end > letters.size()) return;
-        for (int i = start; i < end - 2; i++) {
-            for (int j = i + 2; j < end; j++) {
-                int index = getStraightIndex(i, j);
-                foundStraights.set(index, true);
-            }
-        }
-    }
-/*
-    // oddCharactersOut: return a list of all characters not found
-    // There may be multiple possibilities, due to there being duplicates,
-    // so it returns a list of lists.
-    // All indices must be in ascending order.
-    private static List<List<Integer>> oddCharactersOut(String word) {
-        List<List<Integer>> allPossibilities = new ArrayList<>();
-        for ()
-        return allPossibilities;
-    }
-
-    private static void calculateStraights(String word) {
-        // how do we determine if a straight is possible?
-        // we can start with checking if the characters for indices 0, 1, and 2
-        //   are all separately found
-        // if any characters match, ALL must be found
-        // if [2] is not found, check [5]
-        // if [5] is not found, no straights are possible
-
-        // if [2] is found, we can check all straights that start with 0, 1, and 2
-        // check if [1] is found... if yes, check if [0] is found
-        // if yes, add to straights
-
-        // alternatively, we can determine what straights are possible by what
-        //  letters were NOT found
-        // for a 5-letter word, there will be 3 letters that weren't selected
-        if (word.length() == 8) {
-            // everything is a straight
-            for (int i = 0; i < allStraights.size(); i++) {
-                allStraights.set(i, allStraights.get(i) + 1);
-            }
-        } else if (word.length() == 7) {
-            // find the character(s) that doesn't belong
-            List<List<Integer>> unfoundLists = oddCharactersOut(word);
-            // 0, 5, 6...
-            // we want to add all straights from 1 to 7,
-            // but we don't want to duplicate straights for 1 to 4
-            Set<Integer> allPossibleStraights = new HashSet<>();
-            for (List<Integer> unfoundList: unfoundLists) {
-                Integer notFound = unfoundList.get(0);
-                addAllStraightsInRange(0, notFound - 1);
-                addAllStraightsInRange(notFound + 1, letters.size());
-            }
-        }
-    }*/
-
-    // Instead of worrying about missing letters,
-    // let's try looking solely at arrays of arrays, containing all
-    // possible combinations of letters, and searching them for straights.
-    // To create an array of arrays, we need to find all duplicate letters
-    // in both the word and in the current list of letters.
-    // Then, for each copy of an existing letter, we add a new array
-//    private static void findStraights(String word) {
-////         createLetterMap();
-//        // build map for word
-//        // order is not important for a word, only which letters were used and how many
-//        Map<Character, Integer> letterCount = new HashMap<>();
-//        for (int i = 0; i < word.length(); i++) {
-//            Character letter = word.charAt(i);
-//            if (letterCount.containsKey(letter)) {
-//                letterCount.put(letter, letterCount.get(letter) + 1);
-//            } else {
-//                letterCount.put(letter, 1);
-//            }
-//        }
-//        // now that we have a frequency count for each letter in the word,
-//        // we build an array for every permutation from the letter indices.
-//        // For example, if there are 4 copies of a letter, and our word uses 2,
-//        // we need to create 6 arrays just for these letters.
-//        // That means we go through the letterCount map
-//        List<List<Integer>> possibleSelections = new ArrayList<>(new ArrayList<>());
-//        Iterator<Character> wordLetters = letterCount.keySet().iterator();
-//        while (wordLetters.hasNext()) {
-//            Character letter = wordLetters.next();
-//            expandPermutations(possibleSelections,
-//                    letterIndices.get(letter), letterCount.get(letter));
-//        }
-//        // Now, sort every array, and mark off every one that has a straight.
-//        // DON'T ADD STRAIGHT-COUNTS. Tally them, then add at the end.
-//        Integer capacity = getStraightIndex(0, letters.size());
-//        List<Boolean> straightTally = new ArrayList<>(capacity);
-//        for (int i = 0; i < capacity; i++) {
-//            straightTally.set(i, false);
-//        }
-//        for (int i = 0; i < possibleSelections.size(); i++) {
-//            List<Integer> selection = possibleSelections.get(i);
-//            selection.sort(Comparator.naturalOrder());
-//            int lowestStraight = -1;
-//            int highestStraight = -1;
-//            for (int j = 2; j < selection.size(); j++) {
-//                if (lowestStraight == highestStraight) {
-//                    // none found yet
-//                    if (selection.get(j-2) + 1 == selection.get(j-1) &&
-//                        selection.get(j-1) + 1 == selection.get(j)) {
-//                        lowestStraight = j - 2;
-//                        highestStraight = j;
-//                    }
-//                } else {
-//                    // currently in a straight, keep checking
-//                    if (selection.get(j-1) + 1 == selection.get(j)) {
-//                        // expand straight
-//                        highestStraight = j;
-//                    } else {
-//                        // set the straights
-//                        setAllStraightsInRange(straightTally, lowestStraight, highestStraight);
-//                        lowestStraight = j;
-//                        highestStraight = j;
-//                    }
-//                }
-//            }
-//            // if loop ends on a straight, adjust it
-//            if (lowestStraight != highestStraight) {
-//                setAllStraightsInRange(straightTally, lowestStraight, highestStraight);
-//            }
-//        }
-//        for (int i = 0; i < straightTally.size(); i++) {
-//            if (straightTally.get(i)) {
-//                allStraights.set(i, allStraights.get(i) + 1);
-//            }
-//        }
-//    }
-
     // add if straight does something different;
     // it ONLY adds a straight if ALL the letters can form a straight
     private static void addIfStraight(String word) {
-//         createLetterMap();
         // build map for word
         // order is not important for a word, only which letters were used and how many
         Map<Character, Integer> letterCount = new HashMap<>();
@@ -403,14 +230,8 @@ public class HandCategory {
         // That means we go through the letterCount map
         List<List<Integer>> possibleSelections = new ArrayList<>(new ArrayList<>());
         Iterator<Character> wordLetters = letterCount.keySet().iterator();
-//        System.out.println("addIfStraight on " + letterCount.keySet().toString());
         while (wordLetters.hasNext()) {
             Character letter = wordLetters.next();
-//            System.out.print("expandPermutations(");
-//            System.out.print(possibleSelections);
-//            System.out.print(",");
-//            System.out.print(letterIndices.get(letter));
-//            System.out.println("," + letterCount.get(letter) + ")");
             possibleSelections = expandPermutations(possibleSelections,
                     letterIndices.get(letter), letterCount.get(letter));
         }
@@ -422,7 +243,6 @@ public class HandCategory {
             Collections.sort(selection);
             if (selection.get(selection.size()-1) - selection.get(0) == selection.size() - 1) {
                 notFound = false;
-//                System.out.println("Straight " + selection + " found for " + word);
             }
         }
         if (!notFound) {
@@ -459,8 +279,6 @@ public class HandCategory {
 
     // This handles the generic code for creating permutations
     // of the current "whole" list with new additions in "part" list.
-    // ( [[1,2],[1,4]] , [3,5], 1) -> [[1,2,3],[1,4,3],[1,2,5],[1,4,5]]
-    // ( [[1,2],[1,4]] , [3,5], 2) -> [[1,2,3,5],[1,4,3,5]]
     public static List<List<Integer>> expandPermutations(
             List<List<Integer>> whole, List<Integer> part, Integer draws) {
         if (draws > part.size() || draws < 0) {
@@ -492,11 +310,6 @@ public class HandCategory {
         //    If yes, increase the iterator's value in its index
         //    If not, decrease the index, and repeat
         while (lastMovedIndex >= 0) {
-//            System.out.println("lastMovedIndex: " + lastMovedIndex);
-//            System.out.println("iterator: " + iterator);
-//            System.out.println("part.size(): " + part.size());
-//            System.out.println("canMove(lastMovedIndex, iterator, part.size()): "
-//                    + canMove(lastMovedIndex, iterator, part.size()));
             while (canMove(lastMovedIndex, iterator, part.size())) {
                 iterator.set(lastMovedIndex, iterator.get(lastMovedIndex) + 1);
                 for (int i = lastMovedIndex + 1; i < iterator.size(); i++) {
@@ -511,7 +324,6 @@ public class HandCategory {
                     expandedWhole.add(addToNewWhole);
                 }
             }
-//            System.out.println(expandedWhole);
             lastMovedIndex--;
         }
         return expandedWhole;
@@ -531,27 +343,4 @@ public class HandCategory {
         return true;
     }
 
-//    public static ImmutablePair<Integer, Integer> getBestStraightIndices() {
-//        Integer bestIndex = 0;
-//        Integer bestScore = 0;
-//        for (int i = 0; i < allStraights.size(); i++) {
-//            Integer thisScore = straightScore(i);
-//            if (bestScore < thisScore) {
-//                bestIndex = i;
-//                bestScore = thisScore;
-//            }
-//        }
-//        return indexToStartAndEnd(bestIndex);
-//    }
-
-//    public static Integer getBestStraightScore() {
-//        Integer bestScore = 0;
-//        for (int i = 0; i < allStraights.size(); i++) {
-//            Integer thisScore = straightScore(i);
-//            if (bestScore < thisScore) {
-//                bestScore = thisScore;
-//            }
-//        }
-//        return bestScore;
-//    }
 }

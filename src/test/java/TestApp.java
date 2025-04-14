@@ -1,10 +1,9 @@
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -24,11 +23,11 @@ public class TestApp {
     public void testPermutations() {
         List<List<Integer>> testData = new ArrayList<>(new ArrayList<>());
         // ( [], [1], 1) -> [[1]]
-        List<Integer> testParts = Arrays.asList(1);
+        List<Integer> testParts = Collections.singletonList(1);
         List<List<Integer>> results =
                 HandCategory.expandPermutations(testData, testParts, 1);
-        List<List<Integer>> expectedArray = Arrays.asList(
-                Arrays.asList(1)
+        List<List<Integer>> expectedArray = Collections.singletonList(
+                Collections.singletonList(1)
         );
         Assertions.assertIterableEquals(expectedArray, results);
         testData = expectedArray;
@@ -64,10 +63,10 @@ public class TestApp {
 
     @Test
     void dictionaryTest() {
-        assertFalse(Dictionary.isValidWord("banana"));
+        Assertions.assertFalse(Dictionary.isValidWord("banana"));
         Dictionary.buildDictionary();
-        assertTrue(Dictionary.isValidWord("banana"));
-        assertFalse(Dictionary.isValidWord("bhfgrd"));
+        Assertions.assertTrue(Dictionary.isValidWord("banana"));
+        Assertions.assertFalse(Dictionary.isValidWord("bhfgrd"));
     }
 
     @Test
