@@ -18,6 +18,7 @@ public class Dictionary {
                 "dict/wordlist-main/wordlist.txt");
 
         try {
+            assert dictURL != null;
             String fullDict = Files.readString(Paths.get(dictURL.toURI()), Charset.defaultCharset());
             int dictSize = fullDict.length() - 1;
             System.out.println("dictSize: " + dictSize);
@@ -29,6 +30,7 @@ public class Dictionary {
                 index = nextNewline + 1;
             }
         } catch (IOException | URISyntaxException | NullPointerException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }

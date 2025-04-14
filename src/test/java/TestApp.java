@@ -6,18 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 public class TestApp {
-
-//    @Test
-    public void testLetterCombos() {
-        for (int i = 0; i < 400; i++) {
-            List<Character> letters = LetterPicker.getNewLetters();
-            letters.forEach(System.out::print);
-            System.out.println();
-        }
-    }
 
     @Test
     public void testPermutations() {

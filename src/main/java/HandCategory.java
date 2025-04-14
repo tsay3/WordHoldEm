@@ -1,5 +1,3 @@
-import org.apache.commons.lang3.tuple.ImmutablePair;
-
 import java.util.*;
 
 public class HandCategory {
@@ -190,24 +188,6 @@ public class HandCategory {
             bestFlush = first;
         }
     }
-    // straights are measured by starting letter and length
-    // for 8 letters, this means:
-    // a count of all 6 3-letter straights, then all 5 4-letter straights,
-    // then 5, 6, 7, and 8
-    // Note this list is POSSIBLE straights
-    private static Integer getStraightIndex(Integer start, Integer end) {
-        // (0, 2) -> 0      (1, 3) -> 1
-        if (start + 2 > end) return null;
-        if (start < 0) return null;
-        if (end >= letters.size()) return null;
-        int length = end - start + 1;
-        int value = 0;
-        for (int i = 3; i < length; i++) {
-            // for 8 characters, there are 6
-            value += (letters.size() - i + 1);
-        }
-        return value + start;
-    }
 
     // add if straight does something different;
     // it ONLY adds a straight if ALL the letters can form a straight
@@ -229,9 +209,7 @@ public class HandCategory {
         // we need to create 6 arrays just for these letters.
         // That means we go through the letterCount map
         List<List<Integer>> possibleSelections = new ArrayList<>(new ArrayList<>());
-        Iterator<Character> wordLetters = letterCount.keySet().iterator();
-        while (wordLetters.hasNext()) {
-            Character letter = wordLetters.next();
+        for (Character letter : letterCount.keySet()) {
             possibleSelections = expandPermutations(possibleSelections,
                     letterIndices.get(letter), letterCount.get(letter));
         }
@@ -293,14 +271,14 @@ public class HandCategory {
         for (int i = 0; i < draws; i++) {
             iterator.add(i);
         }
-        if (whole.size() == 0) {
+        if (whole.isEmpty()) {
             whole.add(new ArrayList<>());
         }
         // append iterator references to the whole, add to a larger array
         for (List<Integer> oneList : whole) {
             List<Integer> addToNewWhole = new ArrayList<>(oneList);
-            for (int j = 0; j < iterator.size(); j++) {
-                addToNewWhole.add(part.get(iterator.get(j)));
+            for (Integer integer : iterator) {
+                addToNewWhole.add(part.get(integer));
             }
             expandedWhole.add(addToNewWhole);
         }
@@ -318,8 +296,8 @@ public class HandCategory {
                 // append iterator references to the whole, add to a larger array
                 for (List<Integer> oneList : whole) {
                     List<Integer> addToNewWhole = new ArrayList<>(oneList);
-                    for (int j = 0; j < iterator.size(); j++) {
-                        addToNewWhole.add(part.get(iterator.get(j)));
+                    for (Integer integer : iterator) {
+                        addToNewWhole.add(part.get(integer));
                     }
                     expandedWhole.add(addToNewWhole);
                 }
@@ -339,8 +317,7 @@ public class HandCategory {
         if (index < 0) return false;
         if (indexArray.get(index) >= maxSize - 1) return false;
         if (index == indexArray.size() - 1) return true; // if the last item of the array
-        if ((indexArray.get(index) + 1) == indexArray.get(index + 1)) return false;
-        return true;
+        return (indexArray.get(index) + 1) != indexArray.get(index + 1);
     }
 
 }
