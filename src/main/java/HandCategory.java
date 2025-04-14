@@ -263,40 +263,40 @@ public class HandCategory {
             throw new IndexOutOfBoundsException();
         }
         if (draws == 0) return whole;
-        List<List<Integer>> expandedWhole = new ArrayList<>();
         // create an array of arrays to contain every possible draw
-        List<Integer> iterator = new ArrayList<>();
+        List<List<Integer>> expandedWhole = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
         int lastMovedIndex = draws - 1;
-        // initialize iterator
+        // initialize indices
         for (int i = 0; i < draws; i++) {
-            iterator.add(i);
+            indices.add(i);
         }
         if (whole.isEmpty()) {
             whole.add(new ArrayList<>());
         }
-        // append iterator references to the whole, add to a larger array
+        // append indices references to the whole, add to a larger array
         for (List<Integer> oneList : whole) {
             List<Integer> addToNewWhole = new ArrayList<>(oneList);
-            for (Integer integer : iterator) {
+            for (Integer integer : indices) {
                 addToNewWhole.add(part.get(integer));
             }
             expandedWhole.add(addToNewWhole);
         }
-        // basic algorithm: there are n values in the iterator
+        // basic algorithm: there are n values in the indices
         //   each representing an index of the part array.
         // each step, see if the lastMovedIndex can be increased
-        //    If yes, increase the iterator's value in its index
+        //    If yes, increase the indices's value in its index
         //    If not, decrease the index, and repeat
         while (lastMovedIndex >= 0) {
-            while (canMove(lastMovedIndex, iterator, part.size())) {
-                iterator.set(lastMovedIndex, iterator.get(lastMovedIndex) + 1);
-                for (int i = lastMovedIndex + 1; i < iterator.size(); i++) {
-                    iterator.set(i, iterator.get(i-1) + 1);
+            while (canMove(lastMovedIndex, indices, part.size())) {
+                indices.set(lastMovedIndex, indices.get(lastMovedIndex) + 1);
+                for (int i = lastMovedIndex + 1; i < indices.size(); i++) {
+                    indices.set(i, indices.get(i-1) + 1);
                 }
-                // append iterator references to the whole, add to a larger array
+                // append indices references to the whole, add to a larger array
                 for (List<Integer> oneList : whole) {
                     List<Integer> addToNewWhole = new ArrayList<>(oneList);
-                    for (Integer integer : iterator) {
+                    for (Integer integer : indices) {
                         addToNewWhole.add(part.get(integer));
                     }
                     expandedWhole.add(addToNewWhole);
