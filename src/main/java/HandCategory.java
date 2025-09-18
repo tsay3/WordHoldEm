@@ -1,4 +1,12 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class HandCategory {
     private static List<String> allWords;
@@ -109,7 +117,7 @@ public class HandCategory {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         for (Map.Entry<Character, Integer> entry : wordFreqs.entrySet()) {
             Character character = entry.getKey();
-            if (letterFrequencies.get(character) != entry.getValue()) {
+            if (!Objects.equals(letterFrequencies.get(character), entry.getValue())) {
                 // this word does not use up all of the letters, so we can add the word
                 bestCharacterWords.get(character).add(word);
             }
@@ -158,18 +166,18 @@ public class HandCategory {
     }
 
     public static Character getHighestCharacter(Character c) {
-        if (bestCharacter.size() == 0) updateHighestCharacterCounts();
+        if (bestCharacter.isEmpty()) updateHighestCharacterCounts();
         return bestCharacter.get(c);
     }
 
     public static Integer getHighestCharacterCount(Character c) {
-        if (bestCharacterCount.size() == 0) updateHighestCharacterCounts();
+        if (bestCharacterCount.isEmpty()) updateHighestCharacterCounts();
         return bestCharacterCount.get(c);
     }
 
     public static Integer getHighestCharacterPoints(Character c) {
         int pointsPerChar = 3;
-        if (bestCharacter.size() == 0) {
+        if (bestCharacter.isEmpty()) {
             updateHighestCharacterCounts();
         }
         return bestCharacterCount.get(c) * pointsPerChar;
@@ -211,14 +219,21 @@ public class HandCategory {
             if (letterFrequencies.get(c) > wordFreqs.get(c)) {
                 if (word.length() >= 5) {
                     fivePlusCount.put(c, fivePlusCount.get(c) + 1);
-                    if (word.length() == 8) {
-                        wildPoints.put(c, wildPoints.get(c) + 15);
-                    } else if (word.length() == 7) {
-                        wildPoints.put(c, wildPoints.get(c) + 10);
-                    } else if (word.length() == 6) {
-                        wildPoints.put(c, wildPoints.get(c) + 7);
-                    } else if (word.length() == 5) {
-                        wildPoints.put(c, wildPoints.get(c) + 5);
+                    switch (word.length()) {
+                        case 8:
+                            wildPoints.put(c, wildPoints.get(c) + 15);
+                            break;
+                        case 7:
+                            wildPoints.put(c, wildPoints.get(c) + 10);
+                            break;
+                        case 6:
+                            wildPoints.put(c, wildPoints.get(c) + 7);
+                            break;
+                        case 5:
+                            wildPoints.put(c, wildPoints.get(c) + 5);
+                            break;
+                        default:
+                            break;
                     }
                 } else if (word.length() == 4) {
                     fourCount.put(c, fourCount.get(c) + 1);
@@ -270,14 +285,21 @@ public class HandCategory {
         return 10 * flushCount.get(c).get(bestFlush.get(c));
     }
 
+    // compute the best flush for every possible letter that could be removed
     private static void calculateFlushes(String word) {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         for (Character c : letterFrequencies.keySet()) {
-            if (letterFrequencies.get(c) > wordFreqs.get(c)) {
+            Integer totalOccurrences = letterFrequencies.get(c);
+            Integer wordOccurrences = wordFreqs.getOrDefault(c, 0);
+            // ensure that removing this letter doesn't eliminate the word
+            if (totalOccurrences > wordOccurrences) {
                 Character first = word.charAt(0);
                 flushCount.get(c).put(first, flushCount.get(c).get(first) + 1);
-                if (bestFlush != null) {
-                    if (flushCount.get(c).get(first) >= flushCount.get(c).get(bestFlush.get(c))) {
+                // best flush for each character
+                if (bestFlush != null && bestFlush.get(c) != null) {
+                    Integer firstLetterCount = flushCount.get(c).get(first);
+                    Integer previousBestLetterCount = flushCount.get(c).get(bestFlush.get(c));
+                    if (firstLetterCount >= previousBestLetterCount) {
                         bestFlush.put(c, first);
                     }
                 } else {
