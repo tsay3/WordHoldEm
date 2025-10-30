@@ -2,16 +2,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+// HandCategory is called and updated for every new word that is added.
+// Since there is only one game being run at a time, most of these methods are static.
 public class HandCategory {
     private static List<String> allWords;
     private static List<Character> letters;
-    private static Map<Character, Integer> letterFrequencies;
+    // private static Map<Character, Integer> letterFrequencies;
+    // letterIndices is used for the permutations function
+    // we can use it for frequency counts as well
     private static Map<Character, List<Integer>> letterIndices;
 
     // Each hand category maps possible withheld letters with points.
@@ -20,60 +23,58 @@ public class HandCategory {
     private static Map<Character, Integer> threeCount;
     private static Map<Character, Integer> fourCount;
     private static Map<Character, Integer> fivePlusCount;
-    private static Map<Character, Map<Character, Integer>> flushCount;
+    private static Map<Character, Map<Character, Integer>> flushStats;
     private static Map<Character, Character> bestFlush;
+    private static Map<Character, Integer> flushPoints;
     private static Map<Character, Integer> wildPoints;
     private static Map<Character, Integer> highCount;
     private static Map<Character, Integer> straightPoints;
-//    private static List<Integer> allStraights;
 
     public static void beginRound(List<Character> newLetters) {
         allWords = new ArrayList<>();
         letters = newLetters;
-        char[] letterArray = new char[newLetters.size()];
-        for (int i = 0; i < newLetters.size(); i++) {
-            letterArray[i] = newLetters.get(i);
-        }
-        letterFrequencies = getLetterFrequency(letterArray);
         letterIndices = getLetterIndexMap(newLetters);
         Set<Character> individualLetters = letterIndices.keySet();
+
         threeCount = new HashMap<>();
         fourCount = new HashMap<>();
         fivePlusCount = new HashMap<>();
-        flushCount = new HashMap<>();
+        flushStats = new HashMap<>();
         bestFlush = new HashMap<>();
+        flushPoints = new HashMap<>();
         wildPoints = new HashMap<>();
         highCount = new HashMap<>();
         straightPoints = new HashMap<>();
-//        allStraights = new ArrayList<>();
-//        System.out.println(letterIndices);
         bestCharacterCount = new HashMap<>();
         bestCharacterWords = new HashMap<>();
+
         for (Character letter : individualLetters) {
             threeCount.put(letter, 0);
             fourCount.put(letter, 0);
             fivePlusCount.put(letter, 0);
 
-            flushCount.put(letter, new HashMap<>());
+            flushStats.put(letter, new HashMap<>());
             for (Character c : newLetters) {
-                flushCount.get(letter).put(c, 0);
+                flushStats.get(letter).put(c, 0);
             }
+
             bestFlush.put(letter, null);
+            flushPoints.put(letter, 0);
             wildPoints.put(letter, 0);
             bestCharacterWords.put(letter, new HashSet<>());
         }
     }
     private static Map<Character, List<Integer>>
                 getLetterIndexMap(List<Character> letters) {
-        Map<Character, List<Integer>> letterIndices = new HashMap<>();
+        Map<Character, List<Integer>> letterMap = new HashMap<>();
         for (int i = 0; i < letters.size(); i++) {
             Character letter = letters.get(i);
-            if (!letterIndices.containsKey(letter)) {
-                letterIndices.put(letter, new ArrayList<>());
+            if (!letterMap.containsKey(letter)) {
+                letterMap.put(letter, new ArrayList<>());
             }
-            letterIndices.get(letter).add(i);
+            letterMap.get(letter).add(i);
         }
-        return letterIndices;
+        return letterMap;
     }
     private static Map<Character, Integer> getLetterFrequency(char[] letters) {
         Map<Character, Integer> frequencies = new HashMap<>();
@@ -103,7 +104,6 @@ public class HandCategory {
     }
 
     // highestcharacter will add 1 for every letter in the word, so long as all letters of one type are not used
-    // private static Map<Character, Character> bestCharacter;
     private static Map<Character, Integer> bestCharacterCount;
     private static Map<Character, Character> bestCharacter;
     private static Map<Character, Set<String>> bestCharacterWords;
@@ -117,7 +117,7 @@ public class HandCategory {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         for (Map.Entry<Character, Integer> entry : wordFreqs.entrySet()) {
             Character character = entry.getKey();
-            if (!Objects.equals(letterFrequencies.get(character), entry.getValue())) {
+            if (!Objects.equals(letterIndices.get(character).size(), entry.getValue())) {
                 // this word does not use up all of the letters, so we can add the word
                 bestCharacterWords.get(character).add(word);
             }
@@ -216,7 +216,7 @@ public class HandCategory {
     private static void calculateLengthsAndWilds(String word) {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         for (Character c : wordFreqs.keySet()) {
-            if (letterFrequencies.get(c) > wordFreqs.get(c)) {
+            if (letterIndices.get(c).size() > wordFreqs.get(c)) {
                 if (word.length() >= 5) {
                     fivePlusCount.put(c, fivePlusCount.get(c) + 1);
                     switch (word.length()) {
@@ -248,7 +248,7 @@ public class HandCategory {
 
     public static Integer getWordCount(Character c) {
         // count all words, unless they have every letter of type c
-        int maxAmount = letterFrequencies.get(c) - 1;
+        int maxAmount = letterIndices.get(c).size() - 1;
         int count = 0;
         for (String word : allWords) {
             int letterCount = 0;
@@ -278,27 +278,27 @@ public class HandCategory {
     }
 
     public static Integer getBestFlushCount(Character c) {
-        return flushCount.get(c).get(bestFlush.get(c));
+        return flushStats.get(c).get(bestFlush.get(c));
     }
 
     public static Integer getBestFlushScore(Character c) {
-        return 10 * flushCount.get(c).get(bestFlush.get(c));
+        return 10 * flushStats.get(c).get(bestFlush.get(c));
     }
 
     // compute the best flush for every possible letter that could be removed
     private static void calculateFlushes(String word) {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
-        for (Character c : letterFrequencies.keySet()) {
-            Integer totalOccurrences = letterFrequencies.get(c);
+        for (Character c : letterIndices.keySet()) {
+            Integer totalOccurrences = letterIndices.get(c).size();
             Integer wordOccurrences = wordFreqs.getOrDefault(c, 0);
             // ensure that removing this letter doesn't eliminate the word
             if (totalOccurrences > wordOccurrences) {
                 Character first = word.charAt(0);
-                flushCount.get(c).put(first, flushCount.get(c).get(first) + 1);
+                flushStats.get(c).put(first, flushStats.get(c).get(first) + 1);
                 // best flush for each character
                 if (bestFlush != null && bestFlush.get(c) != null) {
-                    Integer firstLetterCount = flushCount.get(c).get(first);
-                    Integer previousBestLetterCount = flushCount.get(c).get(bestFlush.get(c));
+                    Integer firstLetterCount = flushStats.get(c).get(first);
+                    Integer previousBestLetterCount = flushStats.get(c).get(bestFlush.get(c));
                     if (firstLetterCount >= previousBestLetterCount) {
                         bestFlush.put(c, first);
                     }
@@ -312,7 +312,6 @@ public class HandCategory {
     // add if straight does something different;
     // it ONLY adds a straight if ALL the letters can form a straight
     private static void addIfStraight(String word) {
-        // Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         // build map for word
         // order is not important for a word, only which letters were used and how many
         Map<Character, Integer> letterCount = new HashMap<>();
@@ -334,29 +333,25 @@ public class HandCategory {
             possibleSelections = expandPermutations(possibleSelections,
                     letterIndices.get(letter), letterCount.get(letter));
         }
+
         // now check if at least one combination has all the characters in order
-        List<Boolean> straightIfDeleted = new ArrayList<>();
-        for (int i = 0; i < letters.size(); i++) {
-            straightIfDeleted.add(false);
-        }
-        Iterator<List<Integer>> selectionIter = possibleSelections.iterator();
-        while (selectionIter.hasNext()) {
-            List<Integer> selection = selectionIter.next();
+        int straightIfDeleted = 0;   // an int as a boolean array
+        for (List<Integer> selection : possibleSelections) {
             Collections.sort(selection);
             // the integers will all be different and in order,
             // so check if the length of the array equals
             // the difference in the first and last elements.
             if (selection.get(selection.size()-1) - selection.get(0) == selection.size() - 1) {
                 for (int i = 0; i < selection.get(0); i++) {
-                    straightIfDeleted.set(i, true);
+                    straightIfDeleted |= 0x1 << i;
                 }
                 for (int i = selection.size(); i < letters.size(); i++) {
-                    straightIfDeleted.set(i, true);
+                    straightIfDeleted |= 0x1 << i;
                 }
             }
         }
         for (int i = 0; i < letters.size(); i++) {
-            if (straightIfDeleted.get(i)) {
+            if ((straightIfDeleted & (0x1 << i)) != 0) {
                 addToStraightScore(letters.get(i), word.length());
             }
         }
