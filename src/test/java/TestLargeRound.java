@@ -5,7 +5,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import round.RoundTracker;
+
 public class TestLargeRound {
+
+    static RoundTracker thisRound;
 
     @BeforeAll
     static void setupRound() {
@@ -21,95 +25,95 @@ public class TestLargeRound {
         List<Character> characters = Arrays.asList(
                 'i','o','p','c','s','t','c','o'
         );
-        HandCategory.beginRound(characters);
+        thisRound = new RoundTracker(characters);
         for (String word: words) {
-            HandCategory.addWord(word);
+            thisRound.addWord(word);
         }
     }
 
     @Test
     void testThrees() {
-        Assertions.assertEquals(12, (int) HandCategory.getThreeCount('c'));
-        Assertions.assertEquals(48, (int) HandCategory.getThreeScore('c'));
-        Assertions.assertEquals(11, (int) HandCategory.getThreeCount('o'));
-        Assertions.assertEquals(44, (int) HandCategory.getThreeScore('o'));
-        Assertions.assertEquals(3, (int) HandCategory.getThreeCount('t'));
-        Assertions.assertEquals(12, (int) HandCategory.getThreeScore('t'));
+        Assertions.assertEquals(12, (int) thisRound.getThreeCount('c'));
+        Assertions.assertEquals(48, (int) thisRound.getThreeScore('c'));
+        Assertions.assertEquals(11, (int) thisRound.getThreeCount('o'));
+        Assertions.assertEquals(44, (int) thisRound.getThreeScore('o'));
+        Assertions.assertEquals(3, (int) thisRound.getThreeCount('t'));
+        Assertions.assertEquals(12, (int) thisRound.getThreeScore('t'));
     }
 
     @Test
     void testFours() {
-        Assertions.assertEquals(11, (int) HandCategory.getFourCount('c'));
-        Assertions.assertEquals(96, (int) HandCategory.getFourScore('c'));
-        Assertions.assertEquals(9, (int) HandCategory.getFourCount('i'));
-        Assertions.assertEquals(54, (int) HandCategory.getFourScore('i'));
-        Assertions.assertEquals(2, (int) HandCategory.getFourCount('p'));
-        Assertions.assertEquals(12, (int) HandCategory.getFourScore('p'));
-        Assertions.assertEquals(11, (int) HandCategory.getFourCount('o'));
-        Assertions.assertEquals(96, (int) HandCategory.getFourScore('o'));
+        Assertions.assertEquals(11, (int) thisRound.getFourCount('c'));
+        Assertions.assertEquals(96, (int) thisRound.getFourScore('c'));
+        Assertions.assertEquals(9, (int) thisRound.getFourCount('i'));
+        Assertions.assertEquals(54, (int) thisRound.getFourScore('i'));
+        Assertions.assertEquals(2, (int) thisRound.getFourCount('p'));
+        Assertions.assertEquals(12, (int) thisRound.getFourScore('p'));
+        Assertions.assertEquals(11, (int) thisRound.getFourCount('o'));
+        Assertions.assertEquals(96, (int) thisRound.getFourScore('o'));
     }
 
     @Test
     void testFives() {
-        Assertions.assertEquals(10, (int) HandCategory.getFivePlusCount('c'));
-        Assertions.assertEquals(180, (int) HandCategory.getFivePlusScore('c'));
-        Assertions.assertEquals(5, (int) HandCategory.getFivePlusCount('i'));
-        Assertions.assertEquals(40, (int) HandCategory.getFivePlusScore('i'));
-        Assertions.assertEquals(3, (int) HandCategory.getFivePlusCount('p'));
-        Assertions.assertEquals(24, (int) HandCategory.getFivePlusScore('p'));
-        Assertions.assertEquals(5, (int) HandCategory.getFivePlusCount('o'));
-        Assertions.assertEquals(40, (int) HandCategory.getFivePlusScore('o'));
+        Assertions.assertEquals(10, (int) thisRound.getFivePlusCount('c'));
+        Assertions.assertEquals(180, (int) thisRound.getFivePlusScore('c'));
+        Assertions.assertEquals(5, (int) thisRound.getFivePlusCount('i'));
+        Assertions.assertEquals(40, (int) thisRound.getFivePlusScore('i'));
+        Assertions.assertEquals(3, (int) thisRound.getFivePlusCount('p'));
+        Assertions.assertEquals(24, (int) thisRound.getFivePlusScore('p'));
+        Assertions.assertEquals(5, (int) thisRound.getFivePlusCount('o'));
+        Assertions.assertEquals(40, (int) thisRound.getFivePlusScore('o'));
     }
 
     @Test
     void testFullHouse() {
-        Assertions.assertEquals(33, (int) HandCategory.getWordCount('c'));
-        Assertions.assertEquals(150, (int) HandCategory.getFullHouseScore('c'));
-        Assertions.assertEquals(21, (int) HandCategory.getWordCount('i'));
-        Assertions.assertEquals(50, (int) HandCategory.getFullHouseScore('i'));
-        Assertions.assertEquals(11, (int) HandCategory.getWordCount('p'));
-        Assertions.assertEquals(0, (int) HandCategory.getFullHouseScore('p'));
-        Assertions.assertEquals(26, (int) HandCategory.getWordCount('o'));
-        Assertions.assertEquals(150, (int) HandCategory.getFullHouseScore('o'));
+        Assertions.assertEquals(33, (int) thisRound.getWordCount('c'));
+        Assertions.assertEquals(150, (int) thisRound.getFullHouseScore('c'));
+        Assertions.assertEquals(21, (int) thisRound.getWordCount('i'));
+        Assertions.assertEquals(50, (int) thisRound.getFullHouseScore('i'));
+        Assertions.assertEquals(11, (int) thisRound.getWordCount('p'));
+        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('p'));
+        Assertions.assertEquals(26, (int) thisRound.getWordCount('o'));
+        Assertions.assertEquals(150, (int) thisRound.getFullHouseScore('o'));
     }
 
     @Test
     void testFlush() {
-        Assertions.assertEquals('c', (char) HandCategory.getBestFlush('c'));
-        Assertions.assertEquals(8, (int) HandCategory.getBestFlushCount('c'));
-        Assertions.assertEquals(80, (int) HandCategory.getBestFlushScore('c'));
+        Assertions.assertEquals('c', (char) thisRound.getBestFlush('c'));
+        Assertions.assertEquals(8, (int) thisRound.getBestFlushCount('c'));
+        Assertions.assertEquals(80, (int) thisRound.getBestFlushScore('c'));
     }
 
     @Test
     void testWilds() {
-        Assertions.assertEquals(1*12 + 2*11 + 5*8 + 7*2, (int) HandCategory.getWildPoints('c')); // 88
-        Assertions.assertEquals(1*10 + 2*11 + 5*3 + 7*2, (int) HandCategory.getWildPoints('o')); // 61
+        Assertions.assertEquals(1*12 + 2*11 + 5*8 + 7*2, (int) thisRound.getWildPoints('c')); // 88
+        Assertions.assertEquals(1*10 + 2*11 + 5*3 + 7*2, (int) thisRound.getWildPoints('o')); // 61
     }
 
     @Test
     void testHighCard() {
-        Assertions.assertEquals('o', (char) HandCategory.getHighestCharacter('i'));
-        Assertions.assertEquals(21, (int) HandCategory.getHighestCharacterCount('i'));
-        Assertions.assertEquals(63, (int) HandCategory.getHighestCharacterPoints('i'));
-        Assertions.assertEquals('t', (char) HandCategory.getHighestCharacter('o'));
-        Assertions.assertEquals(23, (int) HandCategory.getHighestCharacterCount('o'));
-        Assertions.assertEquals(69, (int) HandCategory.getHighestCharacterPoints('o'));
-        Assertions.assertEquals('t', (char) HandCategory.getHighestCharacter('p'));
-        Assertions.assertEquals(10, (int) HandCategory.getHighestCharacterCount('p'));
-        Assertions.assertEquals(30, (int) HandCategory.getHighestCharacterPoints('p'));
-        Assertions.assertEquals('t', (char) HandCategory.getHighestCharacter('c'));
-        Assertions.assertEquals(27, (int) HandCategory.getHighestCharacterCount('c'));
-        Assertions.assertEquals(81, (int) HandCategory.getHighestCharacterPoints('c'));
-        Assertions.assertEquals('t', (char) HandCategory.getHighestCharacter('s'));
-        Assertions.assertEquals(8, (int) HandCategory.getHighestCharacterCount('s'));
-        Assertions.assertEquals(24, (int) HandCategory.getHighestCharacterPoints('s'));
-        Assertions.assertEquals('o', (char) HandCategory.getHighestCharacter('t'));
-        Assertions.assertEquals(6, (int) HandCategory.getHighestCharacterCount('t'));
-        Assertions.assertEquals(18, (int) HandCategory.getHighestCharacterPoints('t'));
+        Assertions.assertEquals('o', (char) thisRound.getHighestCharacter('i'));
+        Assertions.assertEquals(21, (int) thisRound.getHighestCharacterCount('i'));
+        Assertions.assertEquals(63, (int) thisRound.getHighestCharacterPoints('i'));
+        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('o'));
+        Assertions.assertEquals(23, (int) thisRound.getHighestCharacterCount('o'));
+        Assertions.assertEquals(69, (int) thisRound.getHighestCharacterPoints('o'));
+        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('p'));
+        Assertions.assertEquals(10, (int) thisRound.getHighestCharacterCount('p'));
+        Assertions.assertEquals(30, (int) thisRound.getHighestCharacterPoints('p'));
+        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('c'));
+        Assertions.assertEquals(27, (int) thisRound.getHighestCharacterCount('c'));
+        Assertions.assertEquals(81, (int) thisRound.getHighestCharacterPoints('c'));
+        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('s'));
+        Assertions.assertEquals(8, (int) thisRound.getHighestCharacterCount('s'));
+        Assertions.assertEquals(24, (int) thisRound.getHighestCharacterPoints('s'));
+        Assertions.assertEquals('o', (char) thisRound.getHighestCharacter('t'));
+        Assertions.assertEquals(6, (int) thisRound.getHighestCharacterCount('t'));
+        Assertions.assertEquals(18, (int) thisRound.getHighestCharacterPoints('t'));
     }
 
     @Test
     void testStraight() {
-        Assertions.assertEquals(82, (int) HandCategory.getStraightPoints('c'));
+        Assertions.assertEquals(82, (int) thisRound.getStraightPoints('c'));
     }
 }

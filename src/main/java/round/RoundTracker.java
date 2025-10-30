@@ -1,3 +1,5 @@
+package round;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,36 +9,38 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import round.category.*;
+
 // HandCategory is called and updated for every new word that is added.
 // Since there is only one game being run at a time, most of these methods are static.
-public class HandCategory {
-    private static List<String> allWords;
-    private static List<Character> letters;
+public class RoundTracker {
+    private List<String> allWords;
+    public List<Character> letters;
     // private static Map<Character, Integer> letterFrequencies;
     // letterIndices is used for the permutations function
     // we can use it for frequency counts as well
-    private static Map<Character, List<Integer>> letterIndices;
+    private Map<Character, List<Integer>> letterIndices;
 
     // Each hand category maps possible withheld letters with points.
     // At the end of the round, these entries indicate the number of points gained
     //    depending on which letter you decide to hold.
-    private static Map<Character, Integer> threeCount;
-    private static Map<Character, Integer> fourCount;
-    private static Map<Character, Integer> fivePlusCount;
-    private static Map<Character, Map<Character, Integer>> flushStats;
-    private static Map<Character, Character> bestFlush;
-    private static Map<Character, Integer> flushPoints;
-    private static Map<Character, Integer> wildPoints;
-    private static Map<Character, Integer> highCount;
-    private static Map<Character, Integer> straightPoints;
+    private ThreeCategory threeCount;
+    private Map<Character, Integer> fourCount;
+    private Map<Character, Integer> fivePlusCount;
+    private Map<Character, Map<Character, Integer>> flushStats;
+    private Map<Character, Character> bestFlush;
+    private Map<Character, Integer> flushPoints;
+    private Map<Character, Integer> wildPoints;
+    private Map<Character, Integer> highCount;
+    private Map<Character, Integer> straightPoints;
 
-    public static void beginRound(List<Character> newLetters) {
+    public RoundTracker(List<Character> newLetters) {
         allWords = new ArrayList<>();
         letters = newLetters;
         letterIndices = getLetterIndexMap(newLetters);
         Set<Character> individualLetters = letterIndices.keySet();
 
-        threeCount = new HashMap<>();
+        threeCount = new ThreeCategory(letters);
         fourCount = new HashMap<>();
         fivePlusCount = new HashMap<>();
         flushStats = new HashMap<>();
@@ -49,7 +53,6 @@ public class HandCategory {
         bestCharacterWords = new HashMap<>();
 
         for (Character letter : individualLetters) {
-            threeCount.put(letter, 0);
             fourCount.put(letter, 0);
             fivePlusCount.put(letter, 0);
 
@@ -64,7 +67,26 @@ public class HandCategory {
             bestCharacterWords.put(letter, new HashSet<>());
         }
     }
-    private static Map<Character, List<Integer>>
+
+    public static int getLetterCount(String word, Character c) {
+        int count = 0;
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) == c) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getRoundCount(Character c) {
+        int count = 0;
+        for (Character letter : letters) {
+            if (c.charValue() == letter.charValue()) count++;
+        }
+        return count;
+    }
+
+    private Map<Character, List<Integer>>
                 getLetterIndexMap(List<Character> letters) {
         Map<Character, List<Integer>> letterMap = new HashMap<>();
         for (int i = 0; i < letters.size(); i++) {
@@ -76,7 +98,7 @@ public class HandCategory {
         }
         return letterMap;
     }
-    private static Map<Character, Integer> getLetterFrequency(char[] letters) {
+    private Map<Character, Integer> getLetterFrequency(char[] letters) {
         Map<Character, Integer> frequencies = new HashMap<>();
         for (Character letter : letters) {
             frequencies.put(letter, frequencies.getOrDefault(letter, 0) + 1);
@@ -84,7 +106,7 @@ public class HandCategory {
         return frequencies;
     }
 
-    public static void addWord(String word){
+    public void addWord(String word){
         allWords.add(word);
         calculateLengthsAndWilds(word);
         calculateFlushes(word);
@@ -93,7 +115,7 @@ public class HandCategory {
         updateHighestCharacterList(word);
     }
 
-    private static void calculateHighCard(String word) {
+    private void calculateHighCard(String word) {
         Set<Character> foundLetters = new HashSet<>();
         for (Character character : word.toCharArray()) {
             foundLetters.add(character);
@@ -104,16 +126,16 @@ public class HandCategory {
     }
 
     // highestcharacter will add 1 for every letter in the word, so long as all letters of one type are not used
-    private static Map<Character, Integer> bestCharacterCount;
-    private static Map<Character, Character> bestCharacter;
-    private static Map<Character, Set<String>> bestCharacterWords;
+    private Map<Character, Integer> bestCharacterCount;
+    private Map<Character, Character> bestCharacter;
+    private Map<Character, Set<String>> bestCharacterWords;
 
     // The challenge: we need to know, for any character we remove, which other character shows up most often in the word list.
     // The solution: a map between every character and a set containing all acceptable words without that extra character
     //      This map is updated with every new word.
     //      When time is up, we find the letter that appeared in the most words in each set, along with their count
 
-    private static void updateHighestCharacterList(String word) {
+    private void updateHighestCharacterList(String word) {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         for (Map.Entry<Character, Integer> entry : wordFreqs.entrySet()) {
             Character character = entry.getKey();
@@ -124,7 +146,7 @@ public class HandCategory {
         }
     }
 
-    private static void updateHighestCharacterCounts() {
+    private void updateHighestCharacterCounts() {
         for (Map.Entry<Character, Set<String>> entry : bestCharacterWords.entrySet()) {
             Character c = entry.getKey();
             Set<String> words = entry.getValue();
@@ -165,17 +187,17 @@ public class HandCategory {
         }
     }
 
-    public static Character getHighestCharacter(Character c) {
+    public Character getHighestCharacter(Character c) {
         if (bestCharacter.isEmpty()) updateHighestCharacterCounts();
         return bestCharacter.get(c);
     }
 
-    public static Integer getHighestCharacterCount(Character c) {
+    public Integer getHighestCharacterCount(Character c) {
         if (bestCharacterCount.isEmpty()) updateHighestCharacterCounts();
         return bestCharacterCount.get(c);
     }
 
-    public static Integer getHighestCharacterPoints(Character c) {
+    public Integer getHighestCharacterPoints(Character c) {
         int pointsPerChar = 3;
         if (bestCharacter.isEmpty()) {
             updateHighestCharacterCounts();
@@ -183,38 +205,39 @@ public class HandCategory {
         return bestCharacterCount.get(c) * pointsPerChar;
     }
 
-    public static Integer getThreeCount(Character c) {
-        return threeCount.get(c);
+    public Integer getThreeCount(Character c) {
+        return threeCount.getCount(c);
     }
 
-    public static Integer getThreeScore(Character c) {
-        return threeCount.get(c) * 4;
+    public Integer getThreeScore(Character c) {
+        return threeCount.getScore(c);
     }
 
-    public static Integer getFourCount(Character c) {
+    public Integer getFourCount(Character c) {
         return fourCount.get(c);
     }
 
-    public static Integer getFourScore(Character c) {
+    public Integer getFourScore(Character c) {
         if (fourCount.get(c) >= 10) {
             return fourCount.get(c) * 6 + 30;
         }
         return fourCount.get(c) * 6;
     }
 
-    public static Integer getFivePlusCount(Character c) {
+    public Integer getFivePlusCount(Character c) {
         return fivePlusCount.get(c);
     }
 
-    public static Integer getFivePlusScore(Character c) {
+    public Integer getFivePlusScore(Character c) {
         if (fivePlusCount.get(c) >= 10) {
             return fivePlusCount.get(c) * 8 + 100;
         }
         return fivePlusCount.get(c) * 8;
     }
 
-    private static void calculateLengthsAndWilds(String word) {
+    private void calculateLengthsAndWilds(String word) {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
+        threeCount.addIfValid(word);
         for (Character c : wordFreqs.keySet()) {
             if (letterIndices.get(c).size() > wordFreqs.get(c)) {
                 if (word.length() >= 5) {
@@ -239,14 +262,13 @@ public class HandCategory {
                     fourCount.put(c, fourCount.get(c) + 1);
                     wildPoints.put(c, wildPoints.get(c) + 2);
                 } else if (word.length() == 3) {
-                    threeCount.put(c, threeCount.get(c) + 1);
                     wildPoints.put(c, wildPoints.get(c) + 1);
                 }
             }
         }
     }
 
-    public static Integer getWordCount(Character c) {
+    public Integer getWordCount(Character c) {
         // count all words, unless they have every letter of type c
         int maxAmount = letterIndices.get(c).size() - 1;
         int count = 0;
@@ -260,11 +282,11 @@ public class HandCategory {
         return count;
     }
 
-    public static Integer getWildPoints(Character c) {
+    public Integer getWildPoints(Character c) {
         return wildPoints.get(c);
     }
 
-    public static Integer getFullHouseScore(Character c) {
+    public Integer getFullHouseScore(Character c) {
         if (allWords.size() >= 25) {
             return 150;
         } else if (allWords.size() >= 15) {
@@ -273,20 +295,20 @@ public class HandCategory {
         return 0;
     }
 
-    public static Character getBestFlush(Character c) {
+    public Character getBestFlush(Character c) {
         return bestFlush.get(c);
     }
 
-    public static Integer getBestFlushCount(Character c) {
+    public Integer getBestFlushCount(Character c) {
         return flushStats.get(c).get(bestFlush.get(c));
     }
 
-    public static Integer getBestFlushScore(Character c) {
+    public Integer getBestFlushScore(Character c) {
         return 10 * flushStats.get(c).get(bestFlush.get(c));
     }
 
     // compute the best flush for every possible letter that could be removed
-    private static void calculateFlushes(String word) {
+    private void calculateFlushes(String word) {
         Map<Character, Integer> wordFreqs = getLetterFrequency(word.toCharArray());
         for (Character c : letterIndices.keySet()) {
             Integer totalOccurrences = letterIndices.get(c).size();
@@ -311,7 +333,7 @@ public class HandCategory {
 
     // add if straight does something different;
     // it ONLY adds a straight if ALL the letters can form a straight
-    private static void addIfStraight(String word) {
+    private void addIfStraight(String word) {
         // build map for word
         // order is not important for a word, only which letters were used and how many
         Map<Character, Integer> letterCount = new HashMap<>();
@@ -357,7 +379,7 @@ public class HandCategory {
         }
     }
 
-    private static void addToStraightScore(Character c, int length) {
+    private void addToStraightScore(Character c, int length) {
         switch(length) {
             case 3:
                 straightPoints.put(c, straightPoints.getOrDefault(c,0) + 4);
@@ -380,7 +402,7 @@ public class HandCategory {
         }
     }
 
-    public static Integer getStraightPoints(Character c) {
+    public Integer getStraightPoints(Character c) {
         return straightPoints.getOrDefault(c, 0);
     }
 

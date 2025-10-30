@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import round.RoundTracker;
+
 public class TestDictionary {
 
     @Test
@@ -14,14 +16,14 @@ public class TestDictionary {
         // ( [], [1], 1) -> [[1]]
         List<Integer> testParts = Collections.singletonList(1);
         List<List<Integer>> results =
-                HandCategory.expandPermutations(testData, testParts, 1);
+                RoundTracker.expandPermutations(testData, testParts, 1);
         List<List<Integer>> expectedArray = Collections.singletonList(
                 Collections.singletonList(1)
         );
         Assertions.assertIterableEquals(expectedArray, results);
         testData = expectedArray;
         testParts = Arrays.asList(2,4);
-        results = HandCategory.expandPermutations(testData, testParts, 1);
+        results = RoundTracker.expandPermutations(testData, testParts, 1);
         expectedArray = Arrays.asList(
                 Arrays.asList(1,2),
                 Arrays.asList(1,4)
@@ -31,7 +33,7 @@ public class TestDictionary {
         // ( [[1,2],[1,4]] , [3,5], 1) -> [[1,2,3],[1,4,3],[1,2,5],[1,4,5]]
         testData = expectedArray;
         testParts = Arrays.asList(3,5);
-        results = HandCategory.expandPermutations(testData, testParts, 1);
+        results = RoundTracker.expandPermutations(testData, testParts, 1);
 
 //        System.out.println("( [[1,2],[1,4]] , [3,5], 1) -> [[1,2,3],[1,4,3],[1,2,5],[1,4,5]]");
 //        System.out.println(results);
@@ -43,7 +45,7 @@ public class TestDictionary {
         Assertions.assertIterableEquals(expectedArray, results);
 
         // ( [[1,2],[1,4]] , [3,5], 2) -> [[1,2,3,5],[1,4,3,5]]
-        results = HandCategory.expandPermutations(testData, testParts, 2);
+        results = RoundTracker.expandPermutations(testData, testParts, 2);
         expectedArray = Arrays.asList(
                 Arrays.asList(1,2,3,5),
                 Arrays.asList(1,4,3,5));
