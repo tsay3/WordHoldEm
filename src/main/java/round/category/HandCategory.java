@@ -18,7 +18,8 @@ public class HandCategory {
     }
 
     protected boolean wordValidAbsentLetter(String s, Character c) {
-        return (tracker.getRoundCount(c) > RoundTracker.getLetterCount(s, c));
+        if (tracker.finalRound) return true;
+        return (tracker.getLetterCountForRound(c) > RoundTracker.getLetterCountForWord(s, c));
     }
 
     public void addIfValid(String word) {
