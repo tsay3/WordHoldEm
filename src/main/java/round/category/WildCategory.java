@@ -14,7 +14,7 @@ public class WildCategory extends HandCategory {
                 count.put(c, count.get(c) + 1);
                 switch (word.length()) {
                     case 8:
-                        // only possible
+                        // only possible for final round
                         score.put(c, score.get(c) + 15);
                         break;
                     case 7:

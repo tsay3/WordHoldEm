@@ -1,5 +1,6 @@
 package round.category;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import round.RoundTracker;
@@ -11,6 +12,8 @@ public class HandCategory {
 
     public HandCategory(RoundTracker tracker) {
         this.tracker = tracker;
+        count = new HashMap<>();
+        score = new HashMap<>();
         for (Character letter : tracker.letters) {
             count.put(letter, 0);
             score.put(letter, 0);

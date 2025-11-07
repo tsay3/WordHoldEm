@@ -79,41 +79,44 @@ public class TestSmallRound {
     @Test
     void testFlush() {
         Assertions.assertEquals('f', (char) thisRound.getBestFlush('c'));
-        Assertions.assertEquals(2, (int) thisRound.getBestFlushCount('c'));
-        Assertions.assertEquals(2*10, (int) thisRound.getBestFlushScore('c'));
+        Assertions.assertEquals(2, (int) thisRound.getFlushCount('c'));
+        Assertions.assertEquals(2*10, (int) thisRound.getFlushScore('c'));
         Assertions.assertEquals('l', (char) thisRound.getBestFlush('o'));
-        Assertions.assertEquals(1, (int) thisRound.getBestFlushCount('o'));
-        Assertions.assertEquals(1*10, (int) thisRound.getBestFlushScore('o'));
+        Assertions.assertEquals(1, (int) thisRound.getFlushCount('o'));
+        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('o'));
         Assertions.assertEquals('l', (char) thisRound.getBestFlush('f'));
-        Assertions.assertEquals(1, (int) thisRound.getBestFlushCount('f'));
-        Assertions.assertEquals(1*10, (int) thisRound.getBestFlushScore('f'));
+        Assertions.assertEquals(1, (int) thisRound.getFlushCount('f'));
+        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('f'));
         Assertions.assertEquals('f', (char) thisRound.getBestFlush('l'));
-        Assertions.assertEquals(1, (int) thisRound.getBestFlushCount('l'));
-        Assertions.assertEquals(1*10, (int) thisRound.getBestFlushScore('l'));
+        Assertions.assertEquals(1, (int) thisRound.getFlushCount('l'));
+        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('l'));
         Assertions.assertEquals('f', (char) thisRound.getBestFlush('a'));
-        Assertions.assertEquals(1, (int) thisRound.getBestFlushCount('a'));
-        Assertions.assertEquals(1*10, (int) thisRound.getBestFlushScore('a'));
+        Assertions.assertEquals(1, (int) thisRound.getFlushCount('a'));
+        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('a'));
         Assertions.assertEquals('f', (char) thisRound.getBestFlush('g'));
-        Assertions.assertEquals(2, (int) thisRound.getBestFlushCount('g'));
-        Assertions.assertEquals(2*10, (int) thisRound.getBestFlushScore('g'));
+        Assertions.assertEquals(2, (int) thisRound.getFlushCount('g'));
+        Assertions.assertEquals(2*10, (int) thisRound.getFlushScore('g'));
     }
 
     @Test
     void testWilds() {
-        Assertions.assertEquals(1*3 + 2*1, (int) thisRound.getWildPoints('c')); // 5
-        Assertions.assertEquals(1*3, (int) thisRound.getWildPoints('o')); // 3
+        Assertions.assertEquals(3, (int) thisRound.getWildCount('g'));
+        Assertions.assertEquals(4, (int) thisRound.getWildCount('c'));
+        Assertions.assertEquals(3, (int) thisRound.getWildCount('o'));
+        Assertions.assertEquals(1*3 + 2*1, (int) thisRound.getWildScore('c')); // 5
+        Assertions.assertEquals(1*3, (int) thisRound.getWildScore('o')); // 3
     }
 
     @Test
     void testHighCard() {
-        Assertions.assertEquals('o', (char) thisRound.getHighestCharacter('c'));
-        Assertions.assertEquals(3, (int) thisRound.getHighestCharacterCount('c'));
-        Assertions.assertEquals(3*3, (int) thisRound.getHighestCharacterPoints('c'));
+        Assertions.assertEquals('o', (char) thisRound.getHighCardCharacter('c'));
+        Assertions.assertEquals(3, (int) thisRound.getHighCardCount('c'));
+        Assertions.assertEquals(3*3, (int) thisRound.getHighCardScore('c'));
     }
 
     @Test
     void testStraight() {
-        Assertions.assertEquals(4, (int) thisRound.getStraightPoints('c'));
-        Assertions.assertEquals(0, (int) thisRound.getStraightPoints('j'));
+        Assertions.assertEquals(4, (int) thisRound.getStraightScore('c'));
+        Assertions.assertEquals(0, (int) thisRound.getStraightScore('j'));
     }
 }

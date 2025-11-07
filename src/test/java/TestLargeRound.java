@@ -80,40 +80,40 @@ public class TestLargeRound {
     @Test
     void testFlush() {
         Assertions.assertEquals('c', (char) thisRound.getBestFlush('c'));
-        Assertions.assertEquals(8, (int) thisRound.getBestFlushCount('c'));
-        Assertions.assertEquals(80, (int) thisRound.getBestFlushScore('c'));
+        Assertions.assertEquals(8, (int) thisRound.getFlushCount('c'));
+        Assertions.assertEquals(80, (int) thisRound.getFlushScore('c'));
     }
 
     @Test
     void testWilds() {
-        Assertions.assertEquals(1*12 + 2*11 + 5*8 + 7*2, (int) thisRound.getWildPoints('c')); // 88
-        Assertions.assertEquals(1*10 + 2*11 + 5*3 + 7*2, (int) thisRound.getWildPoints('o')); // 61
+        Assertions.assertEquals(1*12 + 2*11 + 5*8 + 7*2, (int) thisRound.getWildScore('c')); // 88
+        Assertions.assertEquals(1*10 + 2*11 + 5*3 + 7*2, (int) thisRound.getWildScore('o')); // 61
     }
 
     @Test
     void testHighCard() {
-        Assertions.assertEquals('o', (char) thisRound.getHighestCharacter('i'));
-        Assertions.assertEquals(21, (int) thisRound.getHighestCharacterCount('i'));
-        Assertions.assertEquals(63, (int) thisRound.getHighestCharacterPoints('i'));
-        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('o'));
-        Assertions.assertEquals(23, (int) thisRound.getHighestCharacterCount('o'));
-        Assertions.assertEquals(69, (int) thisRound.getHighestCharacterPoints('o'));
-        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('p'));
-        Assertions.assertEquals(10, (int) thisRound.getHighestCharacterCount('p'));
-        Assertions.assertEquals(30, (int) thisRound.getHighestCharacterPoints('p'));
-        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('c'));
-        Assertions.assertEquals(27, (int) thisRound.getHighestCharacterCount('c'));
-        Assertions.assertEquals(81, (int) thisRound.getHighestCharacterPoints('c'));
-        Assertions.assertEquals('t', (char) thisRound.getHighestCharacter('s'));
-        Assertions.assertEquals(8, (int) thisRound.getHighestCharacterCount('s'));
-        Assertions.assertEquals(24, (int) thisRound.getHighestCharacterPoints('s'));
-        Assertions.assertEquals('o', (char) thisRound.getHighestCharacter('t'));
-        Assertions.assertEquals(6, (int) thisRound.getHighestCharacterCount('t'));
-        Assertions.assertEquals(18, (int) thisRound.getHighestCharacterPoints('t'));
+        Assertions.assertEquals('o', (char) thisRound.getHighCardCharacter('i'));
+        Assertions.assertEquals(21, (int) thisRound.getHighCardCount('i'));
+        Assertions.assertEquals(63, (int) thisRound.getHighCardScore('i'));
+        Assertions.assertEquals('t', (char) thisRound.getHighCardCharacter('o'));
+        Assertions.assertEquals(23, (int) thisRound.getHighCardCount('o'));
+        Assertions.assertEquals(69, (int) thisRound.getHighCardScore('o'));
+        Assertions.assertEquals('t', (char) thisRound.getHighCardCharacter('p'));
+        Assertions.assertEquals(10, (int) thisRound.getHighCardCount('p'));
+        Assertions.assertEquals(30, (int) thisRound.getHighCardScore('p'));
+        Assertions.assertEquals('t', (char) thisRound.getHighCardCharacter('c'));
+        Assertions.assertEquals(27, (int) thisRound.getHighCardCount('c'));
+        Assertions.assertEquals(81, (int) thisRound.getHighCardScore('c'));
+        Assertions.assertEquals('t', (char) thisRound.getHighCardCharacter('s'));
+        Assertions.assertEquals(8, (int) thisRound.getHighCardCount('s'));
+        Assertions.assertEquals(24, (int) thisRound.getHighCardScore('s'));
+        Assertions.assertEquals('o', (char) thisRound.getHighCardCharacter('t'));
+        Assertions.assertEquals(6, (int) thisRound.getHighCardCount('t'));
+        Assertions.assertEquals(18, (int) thisRound.getHighCardScore('t'));
     }
 
     @Test
     void testStraight() {
-        Assertions.assertEquals(82, (int) thisRound.getStraightPoints('c'));
+        Assertions.assertEquals(82, (int) thisRound.getStraightScore('c'));
     }
 }

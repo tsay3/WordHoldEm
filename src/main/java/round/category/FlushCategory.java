@@ -13,11 +13,11 @@ public class FlushCategory extends HandCategory {
 
     public FlushCategory(RoundTracker tracker) {
         super(tracker);
-        bestFlush = new HashMap<>();
         flushStats = new HashMap<>();
+        bestFlush = new HashMap<>();
         for (Character letter : tracker.letters) {
-            bestFlush.put(letter, null);
             flushStats.put(letter, new HashMap<>());
+            bestFlush.put(letter, null);
         }
     }
     @Override
@@ -29,7 +29,7 @@ public class FlushCategory extends HandCategory {
             // ensure that removing this letter doesn't eliminate the word
             if (totalOccurrences > wordOccurrences) {
                 Character first = word.charAt(0);
-                flushStats.get(c).put(first, flushStats.get(c).get(first) + 1);
+                flushStats.get(c).put(first, flushStats.get(c).getOrDefault(first, 0) + 1);
                 // best flush for each character
                 if (bestFlush != null && bestFlush.get(c) != null) {
                     Integer firstLetterCount = flushStats.get(c).get(first);
