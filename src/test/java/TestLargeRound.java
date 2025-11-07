@@ -67,13 +67,13 @@ public class TestLargeRound {
 
     @Test
     void testFullHouse() {
-        Assertions.assertEquals(33, (int) thisRound.getWordCount('c'));
+        Assertions.assertEquals(33, (int) thisRound.getFullHouseCount('c'));
         Assertions.assertEquals(150, (int) thisRound.getFullHouseScore('c'));
-        Assertions.assertEquals(21, (int) thisRound.getWordCount('i'));
+        Assertions.assertEquals(21, (int) thisRound.getFullHouseCount('i'));
         Assertions.assertEquals(50, (int) thisRound.getFullHouseScore('i'));
-        Assertions.assertEquals(11, (int) thisRound.getWordCount('p'));
+        Assertions.assertEquals(11, (int) thisRound.getFullHouseCount('p'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('p'));
-        Assertions.assertEquals(26, (int) thisRound.getWordCount('o'));
+        Assertions.assertEquals(26, (int) thisRound.getFullHouseCount('o'));
         Assertions.assertEquals(150, (int) thisRound.getFullHouseScore('o'));
     }
 

@@ -9,6 +9,8 @@ public class HandCategory {
     protected final RoundTracker tracker;
     protected Map<Character, Integer> count;
     protected Map<Character, Integer> score;
+    protected Integer baseCount;
+    protected Integer baseScore;
 
     public HandCategory(RoundTracker tracker) {
         this.tracker = tracker;
@@ -18,6 +20,8 @@ public class HandCategory {
             count.put(letter, 0);
             score.put(letter, 0);
         }
+        baseCount = 0;
+        baseScore = 0;
     }
 
     protected boolean wordValidAbsentLetter(String s, Character c) {
@@ -29,8 +33,16 @@ public class HandCategory {
         // to be overridden
     }
 
+    public Integer getCount() {
+        return baseCount;
+    }
+
     public Integer getCount(Character c) {
         return count.get(c);
+    }
+
+    public Integer getScore() {
+        return baseScore;
     }
 
     public Integer getScore(Character c) {

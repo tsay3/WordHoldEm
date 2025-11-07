@@ -1,5 +1,8 @@
 package round.category;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import round.RoundTracker;
 
 public class WildCategory extends HandCategory {
@@ -9,7 +12,8 @@ public class WildCategory extends HandCategory {
     }
     @Override
     public void addIfValid(String word) {
-        for (Character c : tracker.letters) {
+        Set<Character> validLetters = new HashSet<>(tracker.letters);
+        for (Character c : validLetters) {
             if (wordValidAbsentLetter(word, c)) {
                 count.put(c, count.get(c) + 1);
                 switch (word.length()) {

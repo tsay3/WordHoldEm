@@ -60,27 +60,27 @@ public class TestSmallRound {
 
     @Test
     void testFullHouse() {
-        Assertions.assertEquals(4, (int) thisRound.getWordCount('c'));
+        Assertions.assertEquals(4, (int) thisRound.getFullHouseCount('c'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('c'));
-        Assertions.assertEquals(4, (int) thisRound.getWordCount('f'));
+        Assertions.assertEquals(4, (int) thisRound.getFullHouseCount('f'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('f'));
-        Assertions.assertEquals(4, (int) thisRound.getWordCount('x'));
+        Assertions.assertEquals(4, (int) thisRound.getFullHouseCount('x'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('x'));
-        Assertions.assertEquals(4, (int) thisRound.getWordCount('g'));
+        Assertions.assertEquals(3, (int) thisRound.getFullHouseCount('g'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('g'));
-        Assertions.assertEquals(3, (int) thisRound.getWordCount('l'));
+        Assertions.assertEquals(3, (int) thisRound.getFullHouseCount('l'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('l'));
-        Assertions.assertEquals(2, (int) thisRound.getWordCount('a'));
+        Assertions.assertEquals(2, (int) thisRound.getFullHouseCount('a'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('a'));
-        Assertions.assertEquals(1, (int) thisRound.getWordCount('o'));
+        Assertions.assertEquals(1, (int) thisRound.getFullHouseCount('o'));
         Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('o'));
     }
 
     @Test
     void testFlush() {
-        Assertions.assertEquals('f', (char) thisRound.getBestFlush('c'));
-        Assertions.assertEquals(2, (int) thisRound.getFlushCount('c'));
-        Assertions.assertEquals(2*10, (int) thisRound.getFlushScore('c'));
+        Assertions.assertEquals('l', (char) thisRound.getBestFlush('c'));
+        Assertions.assertEquals(1, (int) thisRound.getFlushCount('c'));
+        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('c'));
         Assertions.assertEquals('l', (char) thisRound.getBestFlush('o'));
         Assertions.assertEquals(1, (int) thisRound.getFlushCount('o'));
         Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('o'));
@@ -102,21 +102,29 @@ public class TestSmallRound {
     void testWilds() {
         Assertions.assertEquals(3, (int) thisRound.getWildCount('g'));
         Assertions.assertEquals(4, (int) thisRound.getWildCount('c'));
-        Assertions.assertEquals(3, (int) thisRound.getWildCount('o'));
+        Assertions.assertEquals(1, (int) thisRound.getWildCount('o'));
         Assertions.assertEquals(1*3 + 2*1, (int) thisRound.getWildScore('c')); // 5
-        Assertions.assertEquals(1*3, (int) thisRound.getWildScore('o')); // 3
+        Assertions.assertEquals(1*1, (int) thisRound.getWildScore('o')); // 1
     }
 
     @Test
     void testHighCard() {
-        Assertions.assertEquals('o', (char) thisRound.getHighCardCharacter('c'));
+        Assertions.assertEquals('g', (char) thisRound.getHighCardCharacter('o'));
+        Assertions.assertEquals(1, (int) thisRound.getHighCardCount('o'));
+        Assertions.assertEquals(1*3, (int) thisRound.getHighCardScore('o'));
+        Assertions.assertEquals('g', (char) thisRound.getHighCardCharacter('c'));
         Assertions.assertEquals(3, (int) thisRound.getHighCardCount('c'));
         Assertions.assertEquals(3*3, (int) thisRound.getHighCardScore('c'));
+        Assertions.assertEquals('x', (char) thisRound.getHighCardCharacter('g'));
+        Assertions.assertEquals(2, (int) thisRound.getHighCardCount('g'));
+        Assertions.assertEquals(2*3, (int) thisRound.getHighCardScore('g'));
     }
 
     @Test
     void testStraight() {
+        Assertions.assertEquals(1, (int) thisRound.getStraightCount('c'));
         Assertions.assertEquals(4, (int) thisRound.getStraightScore('c'));
+        Assertions.assertEquals(0, (int) thisRound.getStraightCount('c'));
         Assertions.assertEquals(0, (int) thisRound.getStraightScore('j'));
     }
 }

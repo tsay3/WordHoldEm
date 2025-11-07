@@ -15,7 +15,12 @@ public class StraightCategory extends HandCategory {
     }
     @Override
     public void addIfValid(String word) {
-        findStraightsWithMissingLetter(word);
+        if (tracker.finalRound) {
+            findStraightsWithoutMissingLetter(word);
+        }
+        else {
+            findStraightsWithMissingLetter(word);
+        }
     }
 
     // adds a straight if ALL the letters can form a straight, minus the excluded letter
@@ -45,8 +50,9 @@ public class StraightCategory extends HandCategory {
         Map<Character, Integer> subletterFreq = new HashMap<>(tracker.letterFreq);
 
         for (int i = 0; i < tracker.letters.size() - word.length(); i++) {
+            // for a k-letter straight in n letters, get the sublist from 0 to k
             if (i == 0) {
-                // initialize by removing 
+                // initialize by removing k+1 through n-1
                 for (int j = word.length() + 1; j < tracker.letters.size(); j++) {
                     Character c = tracker.letters.get(j);
                     subletterFreq.put(c, subletterFreq.get(c) - 1);
@@ -56,10 +62,10 @@ public class StraightCategory extends HandCategory {
                     }
                 }
             } else {
-                // remove i-1, add i+word.length()-1
+                // remove i-1, add i+k
                 Character c = tracker.letters.get(i-1);
                 subletterFreq.put(c, subletterFreq.get(c) - 1);
-                c = tracker.letters.get(i + word.length() - 1);
+                c = tracker.letters.get(i + word.length());
                 subletterFreq.put(c, subletterFreq.get(c) + 1);
             }
             Character missingLetter = nearlyEquals(wordFreq, subletterFreq);
@@ -81,15 +87,44 @@ public class StraightCategory extends HandCategory {
             score.put(c, score.getOrDefault(c, 0) + straightScore(word.length()));
         }
     }
+    
+    // only check for case 1
+    private void findStraightsWithoutMissingLetter(String word) {
+        // Map<Character, Integer> wordFreq = LetterFrequencies.getLetterFrequency(word.toCharArray());
+        // Map<Character, Integer> subletterFreq = new HashMap<>(tracker.letterFreq);
+
+        for (int i = 0; i < tracker.letters.size() - word.length() - 1; i++) {
+            // if (i == 0) {
+            //     // initialize by removing 
+            //     for (int j = word.length() + 1; j < tracker.letters.size(); j++) {
+            //         Character c = tracker.letters.get(j);
+            //         subletterFreq.put(c, subletterFreq.get(c) - 1);
+            //         // if the removed character is not in word, add it as 0
+            //         if (!wordFreq.containsKey(c)) {
+            //             wordFreq.put(c, 0);
+            //         }
+            //     }
+            // } else {
+            //     // remove i-1, add i+word.length()-1
+            //     Character c = tracker.letters.get(i-1);
+            //     subletterFreq.put(c, subletterFreq.get(c) - 1);
+            //     c = tracker.letters.get(i + word.length() - 1);
+            //     subletterFreq.put(c, subletterFreq.get(c) + 1);
+            // }
+            baseCount += 1;
+            baseScore += straightScore(word.length());
+            return;
+        }
+    }
 
     private int straightScore(int wordLength) {
         switch (wordLength) {
             case 3:
-                return 4;
+                return 6;
             case 4:
-                return 8;
+                return 12;
             case 5:
-                return 16;
+                return 20;
             case 6:
                 return 25;
             case 7:

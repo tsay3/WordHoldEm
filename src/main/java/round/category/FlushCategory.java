@@ -1,7 +1,9 @@
 package round.category;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import round.RoundTracker;
 import util.LetterFrequencies;
@@ -22,8 +24,9 @@ public class FlushCategory extends HandCategory {
     }
     @Override
     public void addIfValid(String word) {
+        Set<Character> validLetters = new HashSet<>(tracker.letters);
         Map<Character, Integer> wordFreqs = LetterFrequencies.getLetterFrequency(word.toCharArray());
-        for (Character c : tracker.letters) {
+        for (Character c : validLetters) {
             Integer totalOccurrences = tracker.letterFreq.get(c);
             Integer wordOccurrences = wordFreqs.getOrDefault(c, 0);
             // ensure that removing this letter doesn't eliminate the word
@@ -32,8 +35,8 @@ public class FlushCategory extends HandCategory {
                 flushStats.get(c).put(first, flushStats.get(c).getOrDefault(first, 0) + 1);
                 // best flush for each character
                 if (bestFlush != null && bestFlush.get(c) != null) {
-                    Integer firstLetterCount = flushStats.get(c).get(first);
-                    Integer previousBestLetterCount = flushStats.get(c).get(bestFlush.get(c));
+                    Integer firstLetterCount = flushStats.get(c).getOrDefault(first, 0);
+                    Integer previousBestLetterCount = flushStats.get(c).getOrDefault(bestFlush.get(c), 0);
                     if (firstLetterCount >= previousBestLetterCount) {
                         bestFlush.put(c, first);
                     }
@@ -46,7 +49,7 @@ public class FlushCategory extends HandCategory {
 
     @Override
     public Integer getCount(Character c) {
-        return flushStats.get(c).get(bestFlush.get(c));
+        return flushStats.get(c).getOrDefault(bestFlush.get(c), 0);
     }
 
     @Override

@@ -26,6 +26,7 @@ public class HighCardCategory extends HandCategory {
         bestCharacters = new HashMap<>();
         for (Character c : tracker.letters) {
             highCounts.put(c, new HashMap<>());
+            
         }
     }
 
@@ -33,8 +34,9 @@ public class HighCardCategory extends HandCategory {
     // we're seeing how many INDIVIDUAL letters are used the most
     @Override
     public void addIfValid(String word) {
+        Set<Character> validLetters = new HashSet<>(tracker.letters);
         Set<Character> usedLetters = new HashSet<>();
-        for (Character c : tracker.letters) {
+        for (Character c : validLetters) {
             if (wordValidAbsentLetter(word, c)) {
                 for (char letter : word.toCharArray()) {
                     if (!usedLetters.contains(letter)) {
@@ -65,7 +67,7 @@ public class HighCardCategory extends HandCategory {
 
     @Override
     public Integer getCount(Character c) {
-        return highCounts.get(c).get(bestCharacters.get(c));
+        return highCounts.get(c).getOrDefault(bestCharacters.get(c), 0);
     }
 
     @Override

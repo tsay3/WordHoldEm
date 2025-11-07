@@ -33,6 +33,9 @@ public class TestRoundProgress {
         round.addWord("beg");
         round.addWord("gag");
         round.addWord("ace");
+        ThreeLettersA(round);
+        ThreeLettersB(round);
+        ThreeLettersC(round);
     }
 
     void NoWords(RoundTracker round, Character c) {
@@ -59,7 +62,7 @@ public class TestRoundProgress {
 
     void FirstWord(RoundTracker round, Character c) {
         Assertions.assertEquals(1, (int) round.getThreeCount(c));
-        Assertions.assertEquals(3, (int) round.getThreeScore(c));
+        Assertions.assertEquals(4, (int) round.getThreeScore(c));
         Assertions.assertEquals(0, (int) round.getFourCount(c));
         Assertions.assertEquals(0, (int) round.getFourScore(c));
 
@@ -113,5 +116,20 @@ public class TestRoundProgress {
         Assertions.assertEquals(8, (int) round.getStraightScore(c));
         Assertions.assertEquals(1, (int) round.getHighCardCount(c));
         Assertions.assertEquals(3, (int) round.getHighCardScore(c));
+    }
+
+    private void ThreeLettersA(RoundTracker round) {
+        Character c = 'a';
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void ThreeLettersB(RoundTracker round) {
+        Character c = 'b';
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void ThreeLettersC(RoundTracker round) {
+        Character c = 'c';
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
