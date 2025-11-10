@@ -48,6 +48,12 @@ public class StraightCategory extends HandCategory {
         Set<Character> allValidCharacters = new HashSet<>();
         Map<Character, Integer> wordFreq = LetterFrequencies.getLetterFrequency(word.toCharArray());
         Map<Character, Integer> subletterFreq = new HashMap<>(tracker.letterFreq);
+        for (Character c : subletterFreq.keySet()) {
+            // if the removed character is not in word, add it as 0
+            if (!wordFreq.containsKey(c)) {
+                wordFreq.put(c, 0);
+            }
+        }
 
         for (int i = 0; i < tracker.letters.size() - word.length(); i++) {
             // for a k-letter straight in n letters, get the sublist from 0 to k
@@ -56,10 +62,6 @@ public class StraightCategory extends HandCategory {
                 for (int j = word.length() + 1; j < tracker.letters.size(); j++) {
                     Character c = tracker.letters.get(j);
                     subletterFreq.put(c, subletterFreq.get(c) - 1);
-                    // if the removed character is not in word, add it as 0
-                    if (!wordFreq.containsKey(c)) {
-                        wordFreq.put(c, 0);
-                    }
                 }
             } else {
                 // remove i-1, add i+k
@@ -71,12 +73,12 @@ public class StraightCategory extends HandCategory {
             Character missingLetter = nearlyEquals(wordFreq, subletterFreq);
             if (missingLetter != null) {
                 allValidCharacters.add(missingLetter);
-                if (tracker.letters.get(i).equals(missingLetter) || tracker.letters.get(i+word.length()-1).equals(missingLetter)) {
+                if (tracker.letters.get(i).equals(missingLetter) || tracker.letters.get(i+word.length()).equals(missingLetter)) {
                     // add every letter before and after
                     for (int j = 0; j < i; j++) {
                         allValidCharacters.add(tracker.letters.get(j));
                     }
-                    for (int j = i+word.length()-1; j < tracker.letters.size(); j++) {
+                    for (int j = i+word.length()+1; j < tracker.letters.size(); j++) {
                         allValidCharacters.add(tracker.letters.get(j));
                     }
                 }

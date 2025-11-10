@@ -36,6 +36,7 @@ public class TestRoundProgress {
         ThreeLettersA(round);
         ThreeLettersB(round);
         ThreeLettersC(round);
+        ThreeLettersG(round);
     }
 
     void NoWords(RoundTracker round, Character c) {
@@ -120,16 +121,37 @@ public class TestRoundProgress {
 
     private void ThreeLettersA(RoundTracker round) {
         Character c = 'a';
-        throw new UnsupportedOperationException("Not supported yet.");
+        // fed, egg, beg
+        Assertions.assertEquals(3, (int) round.getThreeCount(c));
+        Assertions.assertEquals(1, (int) round.getFlushCount(c));
+        Assertions.assertEquals(3, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(1, (int) round.getStraightCount(c));
     }
 
     private void ThreeLettersB(RoundTracker round) {
         Character c = 'b';
-        throw new UnsupportedOperationException("Not supported yet.");
+        // fed, egg, gag, ace
+        Assertions.assertEquals(4, (int) round.getThreeCount(c));
+        Assertions.assertEquals(1, (int) round.getFlushCount(c));
+        Assertions.assertEquals(3, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(1, (int) round.getStraightCount(c));
     }
 
     private void ThreeLettersC(RoundTracker round) {
         Character c = 'c';
-        throw new UnsupportedOperationException("Not supported yet.");
+        // fed, egg, bag, beg, gag
+        Assertions.assertEquals(5, (int) round.getThreeCount(c));
+        Assertions.assertEquals(2, (int) round.getFlushCount(c));
+        Assertions.assertEquals(4, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(1, (int) round.getStraightCount(c));
+    }
+
+    private void ThreeLettersG(RoundTracker round) {
+        Character c = 'g';
+        // cab, fed, bag, beg, ace
+        Assertions.assertEquals(5, (int) round.getThreeCount(c));
+        Assertions.assertEquals(2, (int) round.getFlushCount(c));
+        Assertions.assertEquals(3, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(2, (int) round.getStraightCount(c));
     }
 }

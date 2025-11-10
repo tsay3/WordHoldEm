@@ -1,5 +1,7 @@
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,10 +11,11 @@ import round.RoundTracker;
 
 public class TestSmallRound {
 
-    static RoundTracker thisRound;
+    RoundTracker thisRound;
+    Map<Character, Integer> expectedMap;
 
     @BeforeAll
-    static void setupRound() {
+    void setupRound() {
         List<String> words = Arrays.asList(
                 "coax","jog","focal","fox","goal","lag"
         );
@@ -24,10 +27,12 @@ public class TestSmallRound {
         for (String word: words) {
             thisRound.addWord(word);
         }
+        expectedMap = new HashMap<>();
     }
 
     @Test
     void testThrees() {
+        // Assertions.assertLinesMatch(HandCategory.convertMapToList(expectedMap), HandCategory.convertMapToList(straights.getAllScores()));
         Assertions.assertEquals(3, (int) thisRound.getThreeCount('c'));
         Assertions.assertEquals(3*4, (int) thisRound.getThreeScore('c'));
         Assertions.assertEquals(1, (int) thisRound.getThreeCount('o'));
@@ -123,7 +128,7 @@ public class TestSmallRound {
     @Test
     void testStraight() {
         Assertions.assertEquals(1, (int) thisRound.getStraightCount('c'));
-        Assertions.assertEquals(4, (int) thisRound.getStraightScore('c'));
+        Assertions.assertEquals(6, (int) thisRound.getStraightScore('c'));
         Assertions.assertEquals(0, (int) thisRound.getStraightCount('c'));
         Assertions.assertEquals(0, (int) thisRound.getStraightScore('j'));
     }

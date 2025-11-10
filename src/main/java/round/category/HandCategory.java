@@ -1,6 +1,8 @@
 package round.category;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import round.RoundTracker;
@@ -47,5 +49,23 @@ public class HandCategory {
 
     public Integer getScore(Character c) {
         return score.get(c);
+    }
+
+    public Map<Character, Integer> getAllCounts() {
+        return count;
+    }
+
+    public Map<Character, Integer> getAllScores() {
+        return score;
+    }
+    
+    public static List<String> convertMapToList(Map<Character, Integer> input) {
+        List<String> output = new ArrayList<>();
+        int i = 0;
+        for (Map.Entry<Character, Integer> entry : input.entrySet()) {
+            output.add(entry.getKey().toString() + entry.getValue().toString());
+            i++;
+        }
+        return output;
     }
 }
