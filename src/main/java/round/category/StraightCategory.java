@@ -9,7 +9,13 @@ import round.RoundTracker;
 import util.LetterFrequencies;
 
 public class StraightCategory extends HandCategory {
-
+    public static final int THREE_LETTER_STRAIGHT = 6;
+    public static final int FOUR_LETTER_STRAIGHT = 12;
+    public static final int FIVE_LETTER_STRAIGHT = 20;
+    public static final int SIX_LETTER_STRAIGHT = 25;
+    public static final int SEVEN_LETTER_STRAIGHT = 30;
+    public static final int EIGHT_LETTER_STRAIGHT = 30;
+ 
     public StraightCategory(RoundTracker tracker) {
         super(tracker);
     }
@@ -122,17 +128,17 @@ public class StraightCategory extends HandCategory {
     private int straightScore(int wordLength) {
         switch (wordLength) {
             case 3:
-                return 6;
+                return THREE_LETTER_STRAIGHT;
             case 4:
-                return 12;
+                return FOUR_LETTER_STRAIGHT;
             case 5:
-                return 20;
+                return FIVE_LETTER_STRAIGHT;
             case 6:
-                return 25;
+                return SIX_LETTER_STRAIGHT;
             case 7:
-                return 30;
+                return SEVEN_LETTER_STRAIGHT;
             case 8:
-                return 30;
+                return EIGHT_LETTER_STRAIGHT;
         }
         return 0;
     }

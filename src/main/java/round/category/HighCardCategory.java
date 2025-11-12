@@ -8,6 +8,7 @@ import java.util.Set;
 import round.RoundTracker;
 
 public class HighCardCategory extends HandCategory {
+    public final static int POINTS_PER_CHAR = 4;
 
     // The challenge: we need to know, for any character we remove, which other character shows up most often in the word list.
     // The solution: a map between every character and a set containing all acceptable words without that extra character
@@ -26,7 +27,10 @@ public class HighCardCategory extends HandCategory {
         bestCharacters = new HashMap<>();
         for (Character c : tracker.letters) {
             highCounts.put(c, new HashMap<>());
-            
+            for (Character c1 : tracker.letters) {
+                highCounts.get(c).put(c1, 0);
+            }
+            bestCharacters.put(c, null);
         }
     }
 
@@ -35,21 +39,21 @@ public class HighCardCategory extends HandCategory {
     @Override
     public void addIfValid(String word) {
         Set<Character> validLetters = new HashSet<>(tracker.letters);
-        Set<Character> usedLetters = new HashSet<>();
         for (Character c : validLetters) {
+            Set<Character> usedLetters = new HashSet<>();
             if (wordValidAbsentLetter(word, c)) {
                 for (char letter : word.toCharArray()) {
                     if (!usedLetters.contains(letter)) {
                         usedLetters.add(letter);
-                        highCounts.get(c).put(letter, highCounts.get(c).getOrDefault(letter, 0) + 1);
+                        highCounts.get(c).put(letter, highCounts.get(c).get(letter) + 1);
                     }
                 }
             }
-            updateCharacters(c);
+            updateBestCharacters(c);
         }
     }
 
-    private void updateCharacters(Character c) {
+    private void updateBestCharacters(Character c) {
         Integer highest = 0;
         Map<Character, Integer> currentMap = highCounts.get(c);
         for (Map.Entry<Character, Integer> entry: currentMap.entrySet()) {
@@ -57,6 +61,8 @@ public class HighCardCategory extends HandCategory {
             if (entryCount > highest) {
                 bestCharacters.put(c, entry.getKey());
                 highest = entryCount;
+                count.put(c, highest);
+                score.put(c, highest * POINTS_PER_CHAR);
             }
         }
     }
@@ -65,14 +71,7 @@ public class HighCardCategory extends HandCategory {
         return bestCharacters.get(c);
     }
 
-    @Override
-    public Integer getCount(Character c) {
-        return highCounts.get(c).getOrDefault(bestCharacters.get(c), 0);
-    }
-
-    @Override
-    public Integer getScore(Character c) {
-        int pointsPerChar = 3;
-        return pointsPerChar * getCount(c);
+    public Map<Character, Character> getAllBestCharacters() {
+        return bestCharacters;
     }
 }

@@ -8,16 +8,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import round.RoundTracker;
+import round.category.HighCardCategory;
+import round.category.StraightCategory;
 
 public class TestSmallRound {
 
-    RoundTracker thisRound;
-    Map<Character, Integer> expectedMap;
+    static RoundTracker thisRound;
 
     @BeforeAll
-    void setupRound() {
+    static void setupRound() {
         List<String> words = Arrays.asList(
-                "coax","jog","focal","fox","goal","lag"
+                "coax","jog","focal","fox","goal","lag",
+                "flax","loaf","calf"
         );
         List<Character> characters = Arrays.asList(
                 'l','x','c','a','f','j','g','o'
@@ -27,109 +29,195 @@ public class TestSmallRound {
         for (String word: words) {
             thisRound.addWord(word);
         }
-        expectedMap = new HashMap<>();
     }
 
     @Test
     void testThrees() {
-        // Assertions.assertLinesMatch(HandCategory.convertMapToList(expectedMap), HandCategory.convertMapToList(straights.getAllScores()));
-        Assertions.assertEquals(3, (int) thisRound.getThreeCount('c'));
-        Assertions.assertEquals(3*4, (int) thisRound.getThreeScore('c'));
-        Assertions.assertEquals(1, (int) thisRound.getThreeCount('o'));
-        Assertions.assertEquals(1*4, (int) thisRound.getThreeScore('o'));
-        Assertions.assertEquals(2, (int) thisRound.getThreeCount('l'));
-        Assertions.assertEquals(2*4, (int) thisRound.getThreeScore('l'));
+        // jog, fox, lag
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        expectedMap.put('l', 2);
+        expectedMap.put('x', 2);
+        expectedMap.put('c', 3);
+        expectedMap.put('a', 2);
+        expectedMap.put('f', 2);
+        expectedMap.put('j', 2);
+        expectedMap.put('g', 1);
+        expectedMap.put('o', 1);
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getThreeCount(c));
+            Assertions.assertEquals(expectedMap.get(c)*4, (int) thisRound.getThreeScore(c));
+        }
     }
 
     @Test
     void testFours() {
-        Assertions.assertEquals(1, (int) thisRound.getFourCount('c'));
-        Assertions.assertEquals(1*6, (int) thisRound.getFourScore('c'));
-        Assertions.assertEquals(1, (int) thisRound.getFourCount('x'));
-        Assertions.assertEquals(1*6, (int) thisRound.getFourScore('x'));
-        Assertions.assertEquals(2, (int) thisRound.getFourCount('f'));
-        Assertions.assertEquals(2*6, (int) thisRound.getFourScore('f'));
-        Assertions.assertEquals(0, (int) thisRound.getFourCount('o'));
-        Assertions.assertEquals(0*6, (int) thisRound.getFourScore('o'));
+        // coax, goal, flax, loaf, calf
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        expectedMap.put('l', 1);
+        expectedMap.put('x', 3);
+        expectedMap.put('c', 3);
+        expectedMap.put('a', 0);
+        expectedMap.put('f', 2);
+        expectedMap.put('j', 5);
+        expectedMap.put('g', 4);
+        expectedMap.put('o', 2);
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getFourCount(c));
+            Assertions.assertEquals(expectedMap.get(c)*6, (int) thisRound.getFourScore(c));
+        }
     }
 
     @Test
     void testFives() {
-        Assertions.assertEquals(0, (int) thisRound.getFivePlusCount('c'));
-        Assertions.assertEquals(0*8, (int) thisRound.getFivePlusScore('c'));
-        Assertions.assertEquals(0, (int) thisRound.getFivePlusCount('f'));
-        Assertions.assertEquals(0*8, (int) thisRound.getFivePlusScore('f'));
-        Assertions.assertEquals(1, (int) thisRound.getFivePlusCount('x'));
-        Assertions.assertEquals(1*8, (int) thisRound.getFivePlusScore('x'));
+        // focal
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        expectedMap.put('l', 0);
+        expectedMap.put('x', 1);
+        expectedMap.put('c', 0);
+        expectedMap.put('a', 0);
+        expectedMap.put('f', 0);
+        expectedMap.put('j', 1);
+        expectedMap.put('g', 1);
+        expectedMap.put('o', 0);
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getFivePlusCount(c));
+            Assertions.assertEquals(expectedMap.get(c)*8, (int) thisRound.getFivePlusScore(c));
+        }
     }
 
     @Test
     void testFullHouse() {
-        Assertions.assertEquals(4, (int) thisRound.getFullHouseCount('c'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('c'));
-        Assertions.assertEquals(4, (int) thisRound.getFullHouseCount('f'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('f'));
-        Assertions.assertEquals(4, (int) thisRound.getFullHouseCount('x'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('x'));
-        Assertions.assertEquals(3, (int) thisRound.getFullHouseCount('g'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('g'));
-        Assertions.assertEquals(3, (int) thisRound.getFullHouseCount('l'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('l'));
-        Assertions.assertEquals(2, (int) thisRound.getFullHouseCount('a'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('a'));
-        Assertions.assertEquals(1, (int) thisRound.getFullHouseCount('o'));
-        Assertions.assertEquals(0, (int) thisRound.getFullHouseScore('o'));
+        // fox, jog, lag
+        // calf, coax, flax, goal, loaf
+        // focal
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        expectedMap.put('l', 3);
+        expectedMap.put('x', 6);
+        expectedMap.put('c', 6);
+        expectedMap.put('a', 2);
+        expectedMap.put('f', 4);
+        expectedMap.put('j', 8);
+        expectedMap.put('g', 6);
+        expectedMap.put('o', 3);
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getFullHouseCount(c));
+            Assertions.assertEquals(0, (int) thisRound.getFullHouseScore(c));
+        }
     }
 
     @Test
     void testFlush() {
-        Assertions.assertEquals('l', (char) thisRound.getBestFlush('c'));
-        Assertions.assertEquals(1, (int) thisRound.getFlushCount('c'));
-        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('c'));
-        Assertions.assertEquals('l', (char) thisRound.getBestFlush('o'));
-        Assertions.assertEquals(1, (int) thisRound.getFlushCount('o'));
-        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('o'));
-        Assertions.assertEquals('l', (char) thisRound.getBestFlush('f'));
-        Assertions.assertEquals(1, (int) thisRound.getFlushCount('f'));
-        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('f'));
-        Assertions.assertEquals('f', (char) thisRound.getBestFlush('l'));
-        Assertions.assertEquals(1, (int) thisRound.getFlushCount('l'));
-        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('l'));
-        Assertions.assertEquals('f', (char) thisRound.getBestFlush('a'));
-        Assertions.assertEquals(1, (int) thisRound.getFlushCount('a'));
-        Assertions.assertEquals(1*10, (int) thisRound.getFlushScore('a'));
-        Assertions.assertEquals('f', (char) thisRound.getBestFlush('g'));
-        Assertions.assertEquals(2, (int) thisRound.getFlushCount('g'));
-        Assertions.assertEquals(2*10, (int) thisRound.getFlushScore('g'));
+        // fox, jog, lag
+        // calf, coax, flax, goal, loaf
+        // focal
+        // coax, jog, focal, fox, goal, lag, flax, loaf, calf
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        Map<Character, Character> expectedChar = new HashMap<>();
+        expectedMap.put('l', 1); // coax, jog, fox
+        expectedChar.put('l', 'f');
+        expectedMap.put('x', 2); // jog, focal, goal, lag, loaf, calf
+        expectedChar.put('x', 'l');
+        expectedMap.put('c', 2); // jog, fox, goal, lag, flax, loaf
+        expectedChar.put('c', 'l');
+        expectedMap.put('a', 1); // jog, fox
+        expectedChar.put('a', 'f');
+        expectedMap.put('f', 1); // coax, jog, goal, lag
+        expectedChar.put('f', 'l');
+        expectedMap.put('j', 3); // coax, focal, fox, goal, lag, flax, loaf, calf
+        expectedChar.put('j', 'f');
+        expectedMap.put('g', 3); // coax, focal, fox, flax, loaf, calf
+        expectedChar.put('g', 'f');
+        expectedMap.put('o', 1); // lag, flax, calf
+        expectedChar.put('o', 'c');
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedChar.get(c), thisRound.getBestFlush(c));
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getFlushCount(c));
+            Assertions.assertEquals(expectedMap.get(c) * 10, (int) thisRound.getFlushScore(c));
+        }
     }
 
     @Test
     void testWilds() {
-        Assertions.assertEquals(3, (int) thisRound.getWildCount('g'));
-        Assertions.assertEquals(4, (int) thisRound.getWildCount('c'));
-        Assertions.assertEquals(1, (int) thisRound.getWildCount('o'));
-        Assertions.assertEquals(1*3 + 2*1, (int) thisRound.getWildScore('c')); // 5
-        Assertions.assertEquals(1*1, (int) thisRound.getWildScore('o')); // 1
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        expectedMap.put('l', 3); // coax, jog, fox
+        expectedMap.put('x', 6); // jog, focal, goal, lag, loaf, calf
+        expectedMap.put('c', 6); // jog, fox, goal, lag, flax, loaf
+        expectedMap.put('a', 2); // jog, fox
+        expectedMap.put('f', 4); // coax, jog, goal, lag
+        expectedMap.put('j', 8); // coax, focal, fox, goal, lag, flax, loaf, calf
+        expectedMap.put('g', 6); // coax, focal, fox, flax, loaf, calf
+        expectedMap.put('o', 3); // lag, flax, calf
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getWildCount(c));
+        }
+        expectedMap.put('l', 2+1+1); // coax, jog, fox
+        expectedMap.put('x', 1+5+2+1+2+2); // jog, focal, goal, lag, loaf, calf
+        expectedMap.put('c', 1+1+2+1+2+2); // jog, fox, goal, lag, flax, loaf
+        expectedMap.put('a', 1+1); // jog, fox
+        expectedMap.put('f', 2+1+2+1); // coax, jog, goal, lag
+        expectedMap.put('j', 2+5+1+2+1+2+2+2); // coax, focal, fox, goal, lag, flax, loaf, calf
+        expectedMap.put('g', 2+5+1+2+2+2); // coax, focal, fox, flax, loaf, calf
+        expectedMap.put('o', 1+2+2); // lag, flax, calf
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getWildScore(c));
+        }
     }
 
     @Test
     void testHighCard() {
-        Assertions.assertEquals('g', (char) thisRound.getHighCardCharacter('o'));
-        Assertions.assertEquals(1, (int) thisRound.getHighCardCount('o'));
-        Assertions.assertEquals(1*3, (int) thisRound.getHighCardScore('o'));
-        Assertions.assertEquals('g', (char) thisRound.getHighCardCharacter('c'));
-        Assertions.assertEquals(3, (int) thisRound.getHighCardCount('c'));
-        Assertions.assertEquals(3*3, (int) thisRound.getHighCardScore('c'));
-        Assertions.assertEquals('x', (char) thisRound.getHighCardCharacter('g'));
-        Assertions.assertEquals(2, (int) thisRound.getHighCardCount('g'));
-        Assertions.assertEquals(2*3, (int) thisRound.getHighCardScore('g'));
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        Map<Character, Character> expectedChar = new HashMap<>();
+        expectedMap.put('l', 3); // coax, jog, fox
+        expectedChar.put('l', 'o');
+        expectedMap.put('x', 5); // jog, focal, goal, lag, loaf, calf
+        expectedChar.put('x', 'a');
+        expectedMap.put('c', 4); // jog, fox, goal, lag, flax, loaf
+        expectedChar.put('c', 'a');
+        expectedMap.put('a', 2); // jog, fox
+        expectedChar.put('a', 'o');
+        expectedMap.put('f', 3); // coax, jog, goal, lag
+        expectedChar.put('f', 'a');
+        expectedMap.put('j', 7); // coax, focal, fox, goal, lag, flax, loaf, calf
+        expectedChar.put('j', 'a');
+        expectedMap.put('g', 5); // coax, focal, fox, flax, loaf, calf
+        expectedChar.put('g', 'a');
+        expectedMap.put('o', 3); // lag, flax, calf
+        expectedChar.put('o', 'a');
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedChar.get(c), thisRound.getHighCardCharacter(c));
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getHighCardCount(c));
+            Assertions.assertEquals(expectedMap.get(c) * HighCardCategory.POINTS_PER_CHAR, (int) thisRound.getHighCardScore(c));
+        }
     }
 
     @Test
     void testStraight() {
-        Assertions.assertEquals(1, (int) thisRound.getStraightCount('c'));
-        Assertions.assertEquals(6, (int) thisRound.getStraightScore('c'));
-        Assertions.assertEquals(0, (int) thisRound.getStraightCount('c'));
-        Assertions.assertEquals(0, (int) thisRound.getStraightScore('j'));
+        // coax, jog, focal, fox, goal, lag, flax, loaf, calf
+        // lxcafjgo
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        expectedMap.put('l', 1); // jog
+        expectedMap.put('x', 2); // jog, calf
+        expectedMap.put('c', 2); // jog, flax
+        expectedMap.put('a', 1); // jog
+        expectedMap.put('f', 1); // jog
+        expectedMap.put('j', 0); // 
+        expectedMap.put('g', 0); // 
+        expectedMap.put('o', 0); // 
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getStraightCount(c));
+        }
+        expectedMap.put('l', StraightCategory.THREE_LETTER_STRAIGHT); // jog
+        expectedMap.put('x', StraightCategory.THREE_LETTER_STRAIGHT
+                            + StraightCategory.FOUR_LETTER_STRAIGHT); // jog, calf
+        expectedMap.put('c', StraightCategory.THREE_LETTER_STRAIGHT
+                            + StraightCategory.FOUR_LETTER_STRAIGHT); // jog, flax
+        expectedMap.put('a', StraightCategory.THREE_LETTER_STRAIGHT); // jog
+        expectedMap.put('f', StraightCategory.THREE_LETTER_STRAIGHT); // jog
+        expectedMap.put('j', 0); // 
+        expectedMap.put('g', 0); // 
+        expectedMap.put('o', 0); // 
+        for (Character c : expectedMap.keySet()) {
+            Assertions.assertEquals(expectedMap.get(c), thisRound.getStraightScore(c));
+        }
     }
 }

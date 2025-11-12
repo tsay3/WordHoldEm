@@ -5,11 +5,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import round.RoundTracker;
+import round.category.StraightCategory;
 
 public class TestRoundProgress {
     @Test
     void ProgressTest() {
-        RoundTracker round = new RoundTracker(new ArrayList<Character>(Arrays.asList(
+        RoundTracker round = new RoundTracker(new ArrayList<>(Arrays.asList(
             'a','b','c','d','e','f','g','g'
         )));
 
@@ -75,7 +76,7 @@ public class TestRoundProgress {
         Assertions.assertEquals(1, (int) round.getFullHouseCount(c));
         Assertions.assertEquals(0, (int) round.getFullHouseScore(c));
         Assertions.assertEquals(1, (int) round.getStraightCount(c));
-        Assertions.assertEquals(4, (int) round.getStraightScore(c));
+        Assertions.assertEquals(StraightCategory.THREE_LETTER_STRAIGHT, (int) round.getStraightScore(c));
 
         Assertions.assertEquals(1, (int) round.getHighCardCount(c));
         Assertions.assertEquals(3, (int) round.getHighCardScore(c));
@@ -105,7 +106,7 @@ public class TestRoundProgress {
         TwoWords(round, c);
         
         Assertions.assertEquals(1, (int) round.getStraightCount(c));
-        Assertions.assertEquals(4, (int) round.getStraightScore(c));
+        Assertions.assertEquals(StraightCategory.THREE_LETTER_STRAIGHT, (int) round.getStraightScore(c));
         Assertions.assertEquals(2, (int) round.getHighCardCount(c));
         Assertions.assertEquals(6, (int) round.getHighCardScore(c));
     }
@@ -114,7 +115,7 @@ public class TestRoundProgress {
         TwoWords(round, c);
         
         Assertions.assertEquals(2, (int) round.getStraightCount(c));
-        Assertions.assertEquals(8, (int) round.getStraightScore(c));
+        Assertions.assertEquals(2 * StraightCategory.THREE_LETTER_STRAIGHT, (int) round.getStraightScore(c));
         Assertions.assertEquals(1, (int) round.getHighCardCount(c));
         Assertions.assertEquals(3, (int) round.getHighCardScore(c));
     }

@@ -68,4 +68,23 @@ public class HandCategory {
         }
         return output;
     }
+    
+    public static List<String> convertCharMapToList(Map<Character, Character> input) {
+        List<String> output = new ArrayList<>();
+        int i = 0;
+        for (Map.Entry<Character, Character> entry : input.entrySet()) {
+            if (entry.getValue() == null) {
+                output.add(entry.getKey().toString());
+            } else {
+                output.add(entry.getKey().toString() + entry.getValue().toString());
+            }
+            i++;
+        }
+        return output;
+    }
+
+    // @Override
+    // public String toString() {
+    //     return convertMapToList(count).toString();
+    // }
 }
