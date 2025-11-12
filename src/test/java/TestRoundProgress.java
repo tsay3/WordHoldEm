@@ -38,6 +38,18 @@ public class TestRoundProgress {
         ThreeLettersB(round);
         ThreeLettersC(round);
         ThreeLettersG(round);
+
+        round.addWord("bead");
+        round.addWord("bade");
+        round.addWord("cage");
+        round.addWord("cafe");
+        round.addWord("deaf");
+        round.addWord("face");
+        round.addWord("fade");
+        FourLettersA(round);
+        FourLettersB(round);
+        FourLettersF(round);
+        FourLettersG(round);
     }
 
     void NoWords(RoundTracker round, Character c) {
@@ -79,14 +91,14 @@ public class TestRoundProgress {
         Assertions.assertEquals(StraightCategory.THREE_LETTER_STRAIGHT, (int) round.getStraightScore(c));
 
         Assertions.assertEquals(1, (int) round.getHighCardCount(c));
-        Assertions.assertEquals(3, (int) round.getHighCardScore(c));
+        Assertions.assertEquals(4, (int) round.getHighCardScore(c));
         Assertions.assertEquals(1, (int) round.getFlushCount(c));
         Assertions.assertEquals(10, (int) round.getFlushScore(c));
     }
 
     void TwoWords(RoundTracker round, Character c) {
         Assertions.assertEquals(2, (int) round.getThreeCount(c));
-        Assertions.assertEquals(6, (int) round.getThreeScore(c));
+        Assertions.assertEquals(8, (int) round.getThreeScore(c));
         Assertions.assertEquals(0, (int) round.getFourCount(c));
         Assertions.assertEquals(0, (int) round.getFourScore(c));
 
@@ -108,7 +120,7 @@ public class TestRoundProgress {
         Assertions.assertEquals(1, (int) round.getStraightCount(c));
         Assertions.assertEquals(StraightCategory.THREE_LETTER_STRAIGHT, (int) round.getStraightScore(c));
         Assertions.assertEquals(2, (int) round.getHighCardCount(c));
-        Assertions.assertEquals(6, (int) round.getHighCardScore(c));
+        Assertions.assertEquals(8, (int) round.getHighCardScore(c));
     }
 
     void TwoWordsTwoStraightsOneHigh(RoundTracker round, Character c) {
@@ -117,7 +129,7 @@ public class TestRoundProgress {
         Assertions.assertEquals(2, (int) round.getStraightCount(c));
         Assertions.assertEquals(2 * StraightCategory.THREE_LETTER_STRAIGHT, (int) round.getStraightScore(c));
         Assertions.assertEquals(1, (int) round.getHighCardCount(c));
-        Assertions.assertEquals(3, (int) round.getHighCardScore(c));
+        Assertions.assertEquals(4, (int) round.getHighCardScore(c));
     }
 
     private void ThreeLettersA(RoundTracker round) {
@@ -153,6 +165,41 @@ public class TestRoundProgress {
         Assertions.assertEquals(5, (int) round.getThreeCount(c));
         Assertions.assertEquals(2, (int) round.getFlushCount(c));
         Assertions.assertEquals(3, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(2, (int) round.getStraightCount(c));
+    }
+
+    private void FourLettersA(RoundTracker round) {
+        Character c = 'a';
+        // fed, egg, beg
+        Assertions.assertEquals(1, (int) round.getFlushCount(c));
+        Assertions.assertEquals(3, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(1, (int) round.getStraightCount(c));
+    }
+
+    private void FourLettersB(RoundTracker round) {
+        Character c = 'b';
+        // fed, egg, gag, ace
+        // cage, cafe, deaf, face, fade
+        Assertions.assertEquals(3, (int) round.getFlushCount(c));
+        Assertions.assertEquals(8, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(1, (int) round.getStraightCount(c));
+    }
+
+    private void FourLettersF(RoundTracker round) {
+        Character c = 'f';
+        // cab, egg, bag, beg, gag, ace
+        // bead, bade, cage
+        Assertions.assertEquals(4, (int) round.getFlushCount(c));
+        Assertions.assertEquals(7, (int) round.getHighCardCount(c));
+        Assertions.assertEquals(2, (int) round.getStraightCount(c));
+    }
+
+    private void FourLettersG(RoundTracker round) {
+        Character c = 'g';
+        // cab, fed, bag, beg, ace
+        // bead, bade, cage, cafe, deaf, face, fade
+        Assertions.assertEquals(4, (int) round.getFlushCount(c));
+        Assertions.assertEquals(10, (int) round.getHighCardCount(c));
         Assertions.assertEquals(2, (int) round.getStraightCount(c));
     }
 }
